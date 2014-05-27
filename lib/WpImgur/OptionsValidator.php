@@ -2,7 +2,7 @@
 
 namespace WpImgur;
 
-class OptionsValidator extends \Arrow\OptionsValidator {
+class OptionsValidator extends \Arrow\OptionsManager\OptionsValidator {
 
   function loadRules($validator) {
 

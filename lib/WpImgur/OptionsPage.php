@@ -2,7 +2,7 @@
 
 namespace WpImgur;
 
-class OptionsPage extends \Arrow\OptionsPage {
+class OptionsPage extends \Arrow\OptionsManager\OptionsPage {
 
   function getTemplateContext() {
     return array(
