@@ -27,4 +27,10 @@ class PluginMetaTest extends \WP_UnitTestCase {
     $this->assertEquals('', $options['refreshToken']);
   }
 
+  function test_it_has_expired_default_access_token_expiry() {
+    $now    = strtotime('now');
+    $expiry = $this->meta->getDefaultOptions()['accessTokenExpiry'];
+    $this->assertLessThan($now, $expiry);
+  }
+
 }
