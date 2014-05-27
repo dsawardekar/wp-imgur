@@ -33,10 +33,29 @@ class Plugin extends \Arrow\Plugin {
 
   function initAdminMenu() {
     $this->lookup('optionsPage')->register();
+    $this->initAdminScripts();
   }
 
   function initFrontEnd() {
 
+  }
+
+  function initAdminScripts() {
+    $options = array(
+      'dependencies' => array('jquery'),
+      'localizer' => array($this, 'getAjaxOptions')
+    );
+
+    $loader = $this->lookup('adminScriptLoader');
+    $loader->schedule('wp-imgur-options', $options);
+    $loader->load();
+  }
+
+  function getAjaxOptions($script) {
+    $options = array();
+    $options['adminUrl'] = admin_url('admin-ajax.php');
+
+    return $options;
   }
 
 }
