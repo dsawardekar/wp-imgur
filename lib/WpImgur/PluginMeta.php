@@ -11,7 +11,8 @@ class PluginMeta extends \Arrow\PluginMeta {
   function getDefaultOptions() {
     return array(
       'accessToken' => '',
-      'refreshToken' => ''
+      'refreshToken' => '',
+      'accessTokenExpiry' => strtotime('-1 hour')
     );
   }
 
