@@ -15,9 +15,9 @@ class Plugin extends \Arrow\Plugin {
       ->object('optionsManager', new OptionsManager($this->container))
 
       ->singleton('imgurCredentials', 'WpImgur\Credentials')
-      ->singleton('imgurAdapter', 'WpImgur\Adapter')
-      ->singleton('imgurImageRepo', 'WpImgur\ImageRepo')
-      ->singleton('imgurAlbumRepo', 'WpImgur\AlbumRepo');
+      ->singleton('imgurAdapter', 'Imgur\Adapter')
+      ->singleton('imgurImageRepo', 'Imgur\ImageRepo')
+      ->singleton('imgurAlbumRepo', 'Imgur\AlbumRepo');
   }
 
   function enable() {
@@ -27,6 +27,7 @@ class Plugin extends \Arrow\Plugin {
   }
 
   function initAdmin() {
+    $this->lookup('imgurCredentials')->load();
     $this->lookup('optionsPostHandler')->enable();
   }
 

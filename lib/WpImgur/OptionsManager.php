@@ -8,6 +8,7 @@ class OptionsManager extends \Arrow\OptionsManager\OptionsManager {
     parent::__construct($container);
 
     $container
+      ->singleton('optionsPostHandler', 'WpImgur\OptionsPostHandler')
       ->singleton('optionsValidator', 'WpImgur\OptionsValidator')
       ->singleton('optionsPage', 'WpImgur\OptionsPage');
   }
