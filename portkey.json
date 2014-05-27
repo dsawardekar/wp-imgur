@@ -1,0 +1,10 @@
+{
+  "lib/WpImgur/*.php": {
+    "type": "library",
+    "test": "test/WpImgur/%sTest.php"
+  },
+  "test/WpImgur/*Test.php": {
+    "type": "test",
+    "alternate": "lib/WpImgur/%s.php"
+  }
+}
