@@ -42,12 +42,17 @@ class Plugin extends \Arrow\Plugin {
 
   function initAdminScripts() {
     $options = array(
-      'dependencies' => array('jquery'),
+      'dependencies' => array('jquery', 'jquery-ui-progressbar'),
       'localizer' => array($this, 'getAjaxOptions')
     );
 
     $loader = $this->lookup('adminScriptLoader');
+    $loader->schedule('jquery-ui-progressbar', array('jquery'));
     $loader->schedule('wp-imgur-options', $options);
+    $loader->load();
+
+    $loader = $this->lookup('adminStylesheetLoader');
+    $loader->schedule('jquery-ui');
     $loader->load();
   }
 

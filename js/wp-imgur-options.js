@@ -2,7 +2,14 @@
 
   $(document).ready(function() {
     $('#syncButton').click(function() {
-      alert(wp_imgur_options['adminUrl']);
+      $('#progress-bar').progressbar("value", 50);
+    });
+    $('#progress-bar').progressbar({
+      change: function() {
+        $('#progress-bar .progress-label').text(
+          $('#progress-bar').progressbar("value") + "%"
+        );
+      }
     });
   });
 

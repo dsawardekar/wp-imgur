@@ -5,7 +5,8 @@ namespace WpImgur;
 class PluginMeta extends \Arrow\PluginMeta {
 
   function getVersion() {
-    return Version::$version;
+    //return Version::$version;
+    return strtotime('now');
   }
 
   function getDefaultOptions() {
