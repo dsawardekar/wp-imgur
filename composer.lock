@@ -3,20 +3,20 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "af2ad5c79bfdc1b8066f01977449fd1a",
+    "hash": "28c54b35bcb5b563d27b0ba0b35711fb",
     "packages": [
         {
             "name": "dsawardekar/arrow",
-            "version": "0.7.0",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dsawardekar/arrow.git",
-                "reference": "8a5cc120e869dddcef87be07d322f15f04234e48"
+                "reference": "a72e41af53f4d00106565ea2e92ee5dc2e742ae5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dsawardekar/arrow/zipball/8a5cc120e869dddcef87be07d322f15f04234e48",
-                "reference": "8a5cc120e869dddcef87be07d322f15f04234e48",
+                "url": "https://api.github.com/repos/dsawardekar/arrow/zipball/a72e41af53f4d00106565ea2e92ee5dc2e742ae5",
+                "reference": "a72e41af53f4d00106565ea2e92ee5dc2e742ae5",
                 "shasum": ""
             },
             "require": {
@@ -53,7 +53,7 @@
                 "wordpress",
                 "wordpress plugins"
             ],
-            "time": "2014-05-16 12:22:26"
+            "time": "2014-05-30 10:44:18"
         },
         {
             "name": "dsawardekar/encase-php",
@@ -758,9 +758,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "dsawardekar/arrow": 20
+    },
     "platform": [
 
     ],
