@@ -4,15 +4,16 @@ namespace WpImgur;
 
 class PluginMeta extends \Arrow\PluginMeta {
 
-  function getVersion() {
-    //return Version::$version;
-    return strtotime('now');
+  function __construct($file) {
+    parent::__construct($file);
+
+    $this->version = Version::$version;
   }
 
   function getDefaultOptions() {
     return array(
-      'accessToken' => '',
-      'refreshToken' => '',
+      'accessToken'       => '',
+      'refreshToken'      => '',
       'accessTokenExpiry' => strtotime('-1 hour')
     );
   }
