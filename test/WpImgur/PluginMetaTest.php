@@ -17,7 +17,7 @@ class PluginMetaTest extends \WP_UnitTestCase {
   }
 
   function test_it_has_a_version() {
-    $this->assertEquals(Version::$version, $this->meta->getVersion());
+    $this->assertEquals(Version::$version, $this->meta->version);
   }
 
   function test_it_has_empty_tokens_by_default() {

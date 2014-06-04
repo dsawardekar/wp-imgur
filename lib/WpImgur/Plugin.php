@@ -4,8 +4,6 @@ namespace WpImgur;
 
 class Plugin extends \Arrow\Plugin {
 
-  public $container;
-
   function __construct($file) {
     parent::__construct($file);
 
