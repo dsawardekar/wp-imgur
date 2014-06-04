@@ -22,45 +22,15 @@ class Plugin extends \Arrow\Plugin {
 
   function enable() {
     add_action('admin_init', array($this, 'initAdmin'));
-    add_action('admin_menu', array($this, 'initAdminMenu'));
     add_action('init', array($this, 'initFrontEnd'));
   }
 
   function initAdmin() {
     $this->lookup('imgurCredentials')->load();
-    $this->lookup('optionsPostHandler')->enable();
-  }
-
-  function initAdminMenu() {
-    $this->lookup('optionsPage')->register();
-    $this->initAdminScripts();
   }
 
   function initFrontEnd() {
 
-  }
-
-  function initAdminScripts() {
-    $options = array(
-      'dependencies' => array('jquery', 'jquery-ui-progressbar'),
-      'localizer' => array($this, 'getAjaxOptions')
-    );
-
-    $loader = $this->lookup('adminScriptLoader');
-    $loader->schedule('jquery-ui-progressbar', array('jquery'));
-    $loader->schedule('wp-imgur-options', $options);
-    $loader->load();
-
-    $loader = $this->lookup('adminStylesheetLoader');
-    $loader->schedule('jquery-ui');
-    $loader->load();
-  }
-
-  function getAjaxOptions($script) {
-    $options = array();
-    $options['adminUrl'] = admin_url('admin-ajax.php');
-
-    return $options;
   }
 
 }
