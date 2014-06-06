@@ -1,0 +1,23 @@
+.validation-error {
+  color: #B94A48;
+  background-color: #F2DEDE;
+  outline: 1px solid #EED3D7;
+  padding: 4px;
+}
+
+.hide {
+  display: none;
+}
+
+.wrap div.progress {
+  border-left: 4px solid #F0AD4E;
+}
+
+.imgur-thumb {
+  border: none;
+  outline: none;
+  margin: 0 auto;
+  width: 150px;
+  height: 150px;
+  transition: background-image 200ms ease-in-out;
+}

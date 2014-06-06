@@ -1,6 +1,6 @@
 <?php
 
-namespace WpImgur;
+namespace WpImgur\Api;
 
 class Credentials extends \Imgur\Credentials {
 

@@ -12,6 +12,11 @@ class Plugin extends \Arrow\Plugin {
       ->object('assetManager', new \Arrow\AssetManager\AssetManager($this->container))
       ->object('optionsManager', new OptionsManager($this->container))
 
+      ->singleton('imagePostType', 'WpImgur\ImagePostType')
+
+      ->singleton('configController', 'WpImgur\ConfigController')
+      ->singleton('syncController', 'WpImgur\SyncController')
+
       ->singleton('imgurCredentials', 'WpImgur\Credentials')
       ->singleton('imgurAdapter', 'Imgur\Adapter')
       ->singleton('imgurImageRepo', 'Imgur\ImageRepo')

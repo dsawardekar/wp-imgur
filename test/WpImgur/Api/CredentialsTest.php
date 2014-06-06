@@ -1,6 +1,6 @@
 <?php
 
-namespace WpImgur;
+namespace WpImgur\Api;
 
 use Encase\Container;
 
@@ -14,12 +14,12 @@ class CredentialsTest extends \WP_UnitTestCase {
   function setUp() {
     parent::setUp();
 
-    $this->pluginMeta = new PluginMeta('wp-imgur.php');
+    $this->pluginMeta = new \WpImgur\PluginMeta('wp-imgur.php');
     $this->container  = new Container();
     $this->container
       ->object('pluginMeta', $this->pluginMeta)
       ->object('optionsManager', new \WpImgur\OptionsManager($this->container))
-      ->singleton('imgurCredentials', 'WpImgur\Credentials');
+      ->singleton('imgurCredentials', 'WpImgur\Api\Credentials');
 
     $this->cred = $this->container->lookup('imgurCredentials');
     $this->store = $this->container->lookup('optionsStore');

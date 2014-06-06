@@ -1,6 +1,6 @@
 <?php
 
-namespace WpImgur;
+namespace WpImgur\Models;
 
 class ImagePostType {
 
@@ -72,6 +72,25 @@ SQL;
     }
 
     return $ids;
+  }
+
+  function findImage($id) {
+    return wp_get_attachment_metadata($id, true);
+    $options = array(
+      'post_type'      => 'attachment',
+      'p'              => intval($id),
+      'paged'          => 1,
+      'posts_per_page' => 1
+    );
+
+    $query = new \WP_Query($options);
+    $posts = $query->get_posts();
+
+    if (count($posts) === 1) {
+      return $posts[0];
+    } else {
+      return false;
+    }
   }
 
   function getName() {

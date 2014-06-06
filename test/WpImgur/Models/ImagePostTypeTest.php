@@ -1,6 +1,6 @@
 <?php
 
-namespace WpImgur;
+namespace WpImgur\Models;
 
 class ImagePostTypeTest extends \WP_UnitTestCase {
 
