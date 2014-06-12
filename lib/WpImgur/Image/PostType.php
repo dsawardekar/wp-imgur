@@ -21,6 +21,15 @@ class PostType {
     return wp_insert_post($post, true);
   }
 
+  function update($id, $content) {
+    $post = array(
+      'ID'           => $id,
+      'post_content' => $this->toJSON($content)
+    );
+
+    return wp_update_post($post, true);
+  }
+
   function find($postName) {
     $options = array(
       'post_type'      => $this->getName(),
@@ -33,7 +42,9 @@ class PostType {
     $posts = $query->get_posts();
 
     if (count($posts) === 1) {
-      return $posts[0];
+      $post    = $posts[0];
+      $content = $post->post_content;
+      return $this->toImages($content);
     } else {
       return false;
     }
@@ -79,6 +90,15 @@ class PostType {
 
   function toJSON($content) {
     return json_encode($content);
+  }
+
+  function toImages($content) {
+    $images = json_decode($content, true);
+    if (is_array($images)) {
+      return $images;
+    } else {
+      return array();
+    }
   }
 
 }

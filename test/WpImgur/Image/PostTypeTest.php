@@ -2,8 +2,11 @@
 
 namespace WpImgur\Image;
 
+use Encase\Container;
+
 class PostTypeTest extends \WP_UnitTestCase {
 
+  public $container;
   public $postType;
 
   function setUp() {
@@ -67,13 +70,14 @@ class PostTypeTest extends \WP_UnitTestCase {
 
   function test_it_can_find_stored_image() {
     $this->postType->register();
-    $content = array('foo' => 'bar');
+    $content = array(
+      'sizes' => array('100x100' => 'foo')
+    );
     $this->postType->create('an image', $content);
 
-    $image = $this->postType->find('an image');
-    $json = $image->post_content;
+    $json = $this->postType->find('an image');
 
-    $this->assertEquals(json_decode($json, true), $content);
+    $this->assertEquals('foo', $json['sizes']['100x100']);
   }
 
   function test_it_wont_find_missing_image() {

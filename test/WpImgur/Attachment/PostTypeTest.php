@@ -16,11 +16,9 @@ class PostTypeTest extends \WP_UnitTestCase {
     $this->container = new Container();
     $this->container
       ->factory('image', 'WpImgur\Image\Image')
-      ->singleton('imageStore', 'WpImgur\Image\Store')
       ->singleton('attachmentPostType', 'WpImgur\Attachment\PostType');
 
     $this->postType = $this->container->lookup('attachmentPostType');
-    $this->store    = $this->container->lookup('imageStore');
   }
 
   function test_it_can_find_media_attachment_images() {
