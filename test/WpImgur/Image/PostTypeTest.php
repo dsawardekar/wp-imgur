@@ -91,17 +91,4 @@ class PostTypeTest extends \WP_UnitTestCase {
     $this->assertEquals(3, count($images));
   }
 
-  function test_it_can_find_media_attachment_images() {
-    $meta = array(
-      'post_mime_type' => 'image/jpeg',
-      'post_type' => 'attachment'
-    );
-    $this->factory->attachment->create_object('image-1', 1, $meta);
-    $this->factory->attachment->create_object('image-2', 2, $meta);
-    $this->factory->attachment->create_object('image-3', 3, $meta);
-
-    $images = $this->postType->findImages();
-    $this->assertEquals(3, count($images));
-  }
-
 }

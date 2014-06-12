@@ -18,7 +18,7 @@
   },
 
   "lib/WpImgur/Attachment/*.php": {
-    "type": "image",
+    "type": "attachment",
     "test": "test/WpImgur/Attachment/%sTest.php"
   },
   "test/WpImgur/Attachment/*Test.php": {
