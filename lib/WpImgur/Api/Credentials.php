@@ -39,4 +39,26 @@ class Credentials extends \Imgur\Credentials {
     $store->save();
   }
 
+  /* if tokens are not loaded, an attempt is made to load them
+   * first */
+  function getAccessToken() {
+    $this->load();
+    return parent::getAccessToken();
+  }
+
+  function getAccessTokenExpiry() {
+    $this->load();
+    return parent::getAccessTokenExpiry();
+  }
+
+  function getAccessTokenDuration() {
+    $this->load();
+    return parent::getAccessTokenDuration();
+  }
+
+  function getRefreshToken() {
+    $this->load();
+    return parent::getRefreshToken();
+  }
+
 }
