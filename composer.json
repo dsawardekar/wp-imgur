@@ -3,9 +3,9 @@
     "phpunit/phpunit": "~3.7"
   },
   "require": {
-    "dsawardekar/encase-php": "~0.1.0",
-    "dsawardekar/arrow": "~0.8.0",
-    "dsawardekar/imgur-api": "~0.1.0"
+    "dsawardekar/encase-php": "~0.2.0",
+    "dsawardekar/arrow": "~1.0.0",
+    "dsawardekar/imgur-api": "dev-develop"
   },
   "autoload": {
     "psr-4": {
