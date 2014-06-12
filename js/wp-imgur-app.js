@@ -150,7 +150,7 @@ WpImgur.Adapter = WpImgur.AdapterObject.create({
   nonce: WpImgur.get('nonce'),
 });
 
-WpImgur.ConfigModel = Em.Object.extend({
+WpImgur.AuthModel = Em.Object.extend({
   verifyPin: function() {
     var data = {
       pin: this.get('pin')
@@ -162,7 +162,7 @@ WpImgur.ConfigModel = Em.Object.extend({
     };
 
     return WpImgur.Adapter.ajax(
-      'config', 'verifyPin', params
+      'auth', 'verifyPin', params
     )
     .then(function(json) {
       return true;
@@ -170,17 +170,17 @@ WpImgur.ConfigModel = Em.Object.extend({
   }
 });
 
-WpImgur.ConfigModel.reopenClass({
+WpImgur.AuthModel.reopenClass({
   load: function() {
     var params = {
       type: 'GET'
     };
 
     return WpImgur.Adapter.ajax(
-      'config', 'index', params
+      'auth', 'index', params
     )
     .then(function(json) {
-      var model = WpImgur.ConfigModel.create({});
+      var model = WpImgur.AuthModel.create({});
       model.set('authorized', json.authorized);
       model.set('authorizeUrl', json.authorizeUrl);
       model.set('pin', '');
@@ -326,7 +326,7 @@ WpImgur.Router.reopen({
 
 WpImgur.ApplicationRoute = Em.Route.extend({
   model: function() {
-    return WpImgur.ConfigModel.load();
+    return WpImgur.AuthModel.load();
   },
 
   afterModel: function(model) {

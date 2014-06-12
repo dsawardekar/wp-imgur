@@ -15,7 +15,7 @@ class Plugin extends \Arrow\Plugin {
       ->packager('imgurPackager'     ,  'WpImgur\Api\Packager')
 
       ->singleton('imagePostType'    ,  'WpImgur\Models\ImagePostType')
-      ->singleton('configController' ,  'WpImgur\Ajax\ConfigController')
+      ->singleton('authController' ,  'WpImgur\Ajax\AuthController')
       ->singleton('syncController'   ,  'WpImgur\Ajax\SyncController');
   }
 

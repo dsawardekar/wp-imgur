@@ -2,7 +2,7 @@
 
 namespace WpImgur\Ajax;
 
-class ConfigController extends \Arrow\Ajax\Controller {
+class AuthController extends \Arrow\Ajax\Controller {
 
   function adminActions() {
     return array_merge(
@@ -28,11 +28,9 @@ class ConfigController extends \Arrow\Ajax\Controller {
   }
 
   function index() {
-    $this->sendSuccess(
-      array(
+    return array(
       'authorized' => $this->imgurAdapter->isAuthorized(),
       'authorizeUrl' => $this->imgurAdapter->authorizeUrl()
-      )
     );
   }
 
@@ -46,12 +44,12 @@ class ConfigController extends \Arrow\Ajax\Controller {
 
       try {
         $result = $this->imgurAdapter->verifyPin($pin);
-        $this->sendSuccess($result);
+        return $result;
       } catch (\Imgur\Exception $error) {
-        $this->sendError($error->getMessage());
+        return $this->error($error->getMessage());
       }
     } else {
-      $this->sendError($validator->errors());
+      return $this->error($validator->errors());
     }
   }
 
