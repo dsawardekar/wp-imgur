@@ -18,7 +18,7 @@ class CredentialsTest extends \WP_UnitTestCase {
     $this->container  = new Container();
     $this->container
       ->object('pluginMeta', $this->pluginMeta)
-      ->object('optionsManager', new \WpImgur\OptionsManager($this->container))
+      ->packager('optionsPackager', 'Arrow\Options\Packager')
       ->singleton('imgurCredentials', 'WpImgur\Api\Credentials');
 
     $this->cred = $this->container->lookup('imgurCredentials');
