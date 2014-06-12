@@ -4,7 +4,7 @@
   },
   "require": {
     "dsawardekar/encase-php": "~0.2.0",
-    "dsawardekar/arrow": "~1.0.0",
+    "dsawardekar/arrow": "dev-develop",
     "dsawardekar/imgur-api": "dev-develop"
   },
   "autoload": {

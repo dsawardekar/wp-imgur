@@ -37,8 +37,7 @@ class ConfigController extends \Arrow\Ajax\Controller {
   }
 
   function verifyPin() {
-    \Arrow\Options\Validator::loadStaticRules();
-    $validator = new \Valitron\Validator($this->params);
+    $validator = $this->getValidator();
     $validator->rule('required', 'pin');
     $validator->rule('safeText', 'pin');
 
