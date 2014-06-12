@@ -14,7 +14,9 @@ class PluginMeta extends \Arrow\PluginMeta {
     return array(
       'accessToken'       => '',
       'refreshToken'      => '',
-      'accessTokenExpiry' => strtotime('-1 hour')
+      'accessTokenExpiry' => strtotime('-1 hour'),
+      'album'             => '',
+      'uploadMode'              => 'push'
     );
   }
 
