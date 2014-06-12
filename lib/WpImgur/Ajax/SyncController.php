@@ -1,6 +1,6 @@
 <?php
 
-namespace WpImgur;
+namespace WpImgur\Ajax;
 
 class SyncController extends \Arrow\Ajax\Controller {
 

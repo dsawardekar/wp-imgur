@@ -4,7 +4,7 @@ namespace WpImgur\Api;
 
 class Credentials extends \Imgur\Credentials {
 
-  protected $didLoad    = false;
+  protected $didLoad      = false;
   protected $clientId     = '1c354b6654a4a6d';
   protected $clientSecret = '48535b387a4b995b370d3cbbacaffca94b125da2';
 
