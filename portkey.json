@@ -6,5 +6,23 @@
   "test/WpImgur/*Test.php": {
     "type": "test",
     "alternate": "lib/WpImgur/%s.php"
+  },
+
+  "lib/WpImgur/Image/*.php": {
+    "type": "image",
+    "test": "test/WpImgur/Image/%sTest.php"
+  },
+  "test/WpImgur/Image/*Test.php": {
+    "type": "test",
+    "alternate": "lib/WpImgur/Image/%s.php"
+  },
+
+  "lib/WpImgur/Attachment/*.php": {
+    "type": "attachment",
+    "test": "test/WpImgur/Attachment/%sTest.php"
+  },
+  "test/WpImgur/Attachment/*Test.php": {
+    "type": "test",
+    "alternate": "lib/WpImgur/Attachment/%s.php"
   }
 }

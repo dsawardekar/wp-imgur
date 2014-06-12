@@ -1,8 +1,8 @@
 <?php
 
-namespace WpImgur\Models;
+namespace WpImgur\Image;
 
-class ImagePostType {
+class PostType {
 
   function register() {
     register_post_type(
@@ -53,44 +53,6 @@ class ImagePostType {
 
     $query = new \WP_Query($options);
     return $query->get_posts();
-  }
-
-  function findImages() {
-    global $wpdb;
-    $sql = <<<SQL
-    SELECT id from $wpdb->posts
-    WHERE
-      post_type = 'attachment' AND
-      post_mime_type LIKE 'image/%';
-SQL;
-
-    $images = $wpdb->get_results($sql, ARRAY_N);
-    $ids = array();
-
-    foreach ($images as $image) {
-      array_push($ids, $image[0]);
-    }
-
-    return $ids;
-  }
-
-  function findImage($id) {
-    return wp_get_attachment_metadata($id, true);
-    $options = array(
-      'post_type'      => 'attachment',
-      'p'              => intval($id),
-      'paged'          => 1,
-      'posts_per_page' => 1
-    );
-
-    $query = new \WP_Query($options);
-    $posts = $query->get_posts();
-
-    if (count($posts) === 1) {
-      return $posts[0];
-    } else {
-      return false;
-    }
   }
 
   function getName() {

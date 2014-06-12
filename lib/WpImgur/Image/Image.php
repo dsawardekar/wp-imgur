@@ -1,6 +1,6 @@
 <?php
 
-namespace WpImgur\Models;
+namespace WpImgur\Image;
 
 class Image {
 

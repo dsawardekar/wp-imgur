@@ -1,15 +1,15 @@
 <?php
 
-namespace WpImgur\Models;
+namespace WpImgur\Image;
 
-class ImagePostTypeTest extends \WP_UnitTestCase {
+class PostTypeTest extends \WP_UnitTestCase {
 
   public $postType;
 
   function setUp() {
     parent::setUp();
 
-    $this->postType = new ImagePostType();
+    $this->postType = new PostType();
   }
 
   function test_it_has_a_name() {
@@ -88,19 +88,6 @@ class ImagePostTypeTest extends \WP_UnitTestCase {
     $this->postType->create('image 3', array('foo' => 3));
 
     $images = $this->postType->findBy(array('image-1', 'image-2', 'image-3'));
-    $this->assertEquals(3, count($images));
-  }
-
-  function test_it_can_find_media_attachment_images() {
-    $meta = array(
-      'post_mime_type' => 'image/jpeg',
-      'post_type' => 'attachment'
-    );
-    $this->factory->attachment->create_object('image-1', 1, $meta);
-    $this->factory->attachment->create_object('image-2', 2, $meta);
-    $this->factory->attachment->create_object('image-3', 3, $meta);
-
-    $images = $this->postType->findImages();
     $this->assertEquals(3, count($images));
   }
 

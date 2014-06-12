@@ -1,12 +1,13 @@
 <?php
 
-namespace WpImgur\Models;
+namespace WpImgur\Attachment;
 
 use Encase\Container;
 
-class ImageStoreTest extends \WP_UnitTestCase {
+class PostTypeTest extends \WP_UnitTestCase {
 
   public $container;
+  public $postType;
   public $store;
 
   function setUp() {
@@ -14,24 +15,30 @@ class ImageStoreTest extends \WP_UnitTestCase {
 
     $this->container = new Container();
     $this->container
-      ->factory('image', 'WpImgur\Models\Image')
-      ->singleton('imageStore', 'WpImgur\Models\ImageStore');
+      ->factory('image', 'WpImgur\Image\Image')
+      ->singleton('imageStore', 'WpImgur\Image\Store')
+      ->singleton('attachmentPostType', 'WpImgur\Attachment\PostType');
 
-    $this->store = $this->container->lookup('imageStore');
+    $this->postType = $this->container->lookup('attachmentPostType');
+    $this->store    = $this->container->lookup('imageStore');
   }
 
-  function test_it_has_a_container() {
-    $this->assertSame($this->container, $this->store->container);
-  }
+  function test_it_can_find_media_attachment_images() {
+    $meta = array(
+      'post_mime_type' => 'image/jpeg',
+      'post_type' => 'attachment'
+    );
+    $this->factory->attachment->create_object('image-1', 1, $meta);
+    $this->factory->attachment->create_object('image-2', 2, $meta);
+    $this->factory->attachment->create_object('image-3', 3, $meta);
 
-  function test_it_can_create_images() {
-    $image = $this->store->container->lookup('image');
-    $this->assertInstanceOf('WpImgur\Models\Image', $image);
+    $images = $this->postType->findAll();
+    $this->assertEquals(3, count($images));
   }
 
   function test_it_returns_empty_list_of_images_for_unknown_attachment_id() {
-    $this->store->loadAttachment(1000);
-    $this->assertEquals(0, $this->store->count());
+    $images = $this->postType->find(1000);
+    $this->assertEquals(0, count($images));
   }
 
   function getImageData() {
@@ -89,7 +96,7 @@ class ImageStoreTest extends \WP_UnitTestCase {
 
   function test_it_can_load_images_for_attachment() {
     $id = $this->setUpAttachment();
-    $images = $this->store->loadAttachment($id);
+    $images = $this->postType->find($id);
 
     $image = $images[0];
     $this->assertEquals('original', $image->getKind());
@@ -116,7 +123,4 @@ class ImageStoreTest extends \WP_UnitTestCase {
     $this->assertEquals('624x405', $image->getSize());
     $this->assertEquals('foo-624x405.jpg', $image->getFilename());
   }
-
-
-
 }

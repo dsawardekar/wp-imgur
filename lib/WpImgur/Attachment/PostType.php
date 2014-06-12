@@ -1,43 +1,39 @@
 <?php
 
-namespace WpImgur\Models;
+namespace WpImgur\Attachment;
 
-class ImageStore {
+class PostType {
 
   public $container;
-  public $images;
-  public $slug;
-  public $sizes;
 
   function needs() {
     return array();
   }
 
-  function hasImage($size) {
-
+  function getName() {
+    return 'attachment';
   }
 
-  function addImage($size, $url) {
+  function findAll() {
+    global $wpdb;
+    $sql = <<<SQL
+    SELECT id from $wpdb->posts
+    WHERE
+      post_type = 'attachment' AND
+      post_mime_type LIKE 'image/%';
+SQL;
 
+    $images = $wpdb->get_results($sql, ARRAY_N);
+    $ids    = array();
+
+    foreach ($images as $image) {
+      array_push($ids, $image[0]);
+    }
+
+    return $ids;
   }
 
-  function removeImage($size, $url) {
-
-  }
-
-  function getImage($size) {
-
-  }
-
-  function save() {
-
-  }
-
-  function count() {
-    return count($this->images);
-  }
-
-  function loadAttachment($id) {
+  function find($id) {
     $images         = array();
     $attachmentMeta = wp_get_attachment_metadata($id);
 
@@ -73,6 +69,5 @@ class ImageStore {
 
     return $images;
   }
-
 
 }
