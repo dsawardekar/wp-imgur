@@ -8,19 +8,15 @@ class Plugin extends \Arrow\Plugin {
     parent::__construct($file);
 
     $this->container
-      ->object('pluginMeta', new PluginMeta($file))
-      ->object('assetManager', new \Arrow\AssetManager\AssetManager($this->container))
-      ->object('optionsManager', new OptionsManager($this->container))
+      ->object('pluginMeta'          ,  new PluginMeta($file))
 
-      ->singleton('imagePostType', 'WpImgur\ImagePostType')
+      ->packager('assetPackager'     ,  'Arrow\Asset\Packager')
+      ->packager('optionsPackager'   ,  'Arrow\Options\Packager')
+      ->packager('imgurPackager'     ,  'WpImgur\Api\Packager')
 
-      ->singleton('configController', 'WpImgur\ConfigController')
-      ->singleton('syncController', 'WpImgur\SyncController')
-
-      ->singleton('imgurCredentials', 'WpImgur\Credentials')
-      ->singleton('imgurAdapter', 'Imgur\Adapter')
-      ->singleton('imgurImageRepo', 'Imgur\ImageRepo')
-      ->singleton('imgurAlbumRepo', 'Imgur\AlbumRepo');
+      ->singleton('imagePostType'    ,  'WpImgur\Models\ImagePostType')
+      ->singleton('configController' ,  'WpImgur\Ajax\ConfigController')
+      ->singleton('syncController'   ,  'WpImgur\Ajax\SyncController');
   }
 
   function enable() {

@@ -1,31 +1,33 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
-    "hash": "c8876ed362687847710dabc16ef0e575",
+    "hash": "0996dff4a6c6a049f76b02aace6a5299",
     "packages": [
         {
             "name": "dsawardekar/arrow",
-            "version": "0.8.2",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dsawardekar/arrow.git",
-                "reference": "f5582abc160126164a8f2fd6467c55fb9e50dd68"
+                "reference": "6360060df046049981efd85d712407aa27164e17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dsawardekar/arrow/zipball/f5582abc160126164a8f2fd6467c55fb9e50dd68",
-                "reference": "f5582abc160126164a8f2fd6467c55fb9e50dd68",
+                "url": "https://api.github.com/repos/dsawardekar/arrow/zipball/6360060df046049981efd85d712407aa27164e17",
+                "reference": "6360060df046049981efd85d712407aa27164e17",
                 "shasum": ""
             },
             "require": {
-                "dsawardekar/encase-php": "~0.1.0",
+                "dsawardekar/encase-php": "~0.2.0",
                 "dsawardekar/wp-requirements": "~0.3.0",
                 "twig/twig": "~1.15.0",
                 "vlucas/valitron": "~1.1.5"
             },
             "require-dev": {
+                "mockery/mockery": "~0.9.0",
                 "phpunit/phpunit": "~3.7.0"
             },
             "type": "library",
@@ -53,20 +55,20 @@
                 "wordpress",
                 "wordpress plugins"
             ],
-            "time": "2014-06-03 10:55:13"
+            "time": "2014-06-11 08:27:01"
         },
         {
             "name": "dsawardekar/encase-php",
-            "version": "0.1.3",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dsawardekar/encase-php.git",
-                "reference": "4208bf2632230e72a11c98f29e34df24f7b9ca63"
+                "reference": "348784176c8666ea5eceeed5d429b2ddbf4ab7e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dsawardekar/encase-php/zipball/4208bf2632230e72a11c98f29e34df24f7b9ca63",
-                "reference": "4208bf2632230e72a11c98f29e34df24f7b9ca63",
+                "url": "https://api.github.com/repos/dsawardekar/encase-php/zipball/348784176c8666ea5eceeed5d429b2ddbf4ab7e0",
+                "reference": "348784176c8666ea5eceeed5d429b2ddbf4ab7e0",
                 "shasum": ""
             },
             "require-dev": {
@@ -97,24 +99,24 @@
                 "dependency injection",
                 "ioc"
             ],
-            "time": "2014-05-01 16:19:03"
+            "time": "2014-06-06 11:58:13"
         },
         {
             "name": "dsawardekar/imgur-api",
-            "version": "0.1.0",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dsawardekar/imgur-api.git",
-                "reference": "3120a309148342bfc9105e3058a87ce780c5ee05"
+                "reference": "c9ef873e0ec825637ac5e904c881ccaa08116021"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dsawardekar/imgur-api/zipball/3120a309148342bfc9105e3058a87ce780c5ee05",
-                "reference": "3120a309148342bfc9105e3058a87ce780c5ee05",
+                "url": "https://api.github.com/repos/dsawardekar/imgur-api/zipball/c9ef873e0ec825637ac5e904c881ccaa08116021",
+                "reference": "c9ef873e0ec825637ac5e904c881ccaa08116021",
                 "shasum": ""
             },
             "require": {
-                "dsawardekar/encase-php": "~0.1.0",
+                "dsawardekar/encase-php": "~0.2.0",
                 "rmccue/requests": ">=1.0"
             },
             "require-dev": {
@@ -145,7 +147,7 @@
                 "images",
                 "imgur"
             ],
-            "time": "2014-05-27 09:38:46"
+            "time": "2014-06-12 04:16:38"
         },
         {
             "name": "dsawardekar/wp-requirements",
@@ -294,16 +296,16 @@
         },
         {
             "name": "vlucas/valitron",
-            "version": "1.1.5",
+            "version": "1.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/valitron.git",
-                "reference": "63695ad7d1d9c98f5ae67b535567006c8d1bba01"
+                "reference": "c0ff8076d694a3c35f97dc34760107bb2bea6f20"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/valitron/zipball/63695ad7d1d9c98f5ae67b535567006c8d1bba01",
-                "reference": "63695ad7d1d9c98f5ae67b535567006c8d1bba01",
+                "url": "https://api.github.com/repos/vlucas/valitron/zipball/c0ff8076d694a3c35f97dc34760107bb2bea6f20",
+                "reference": "c0ff8076d694a3c35f97dc34760107bb2bea6f20",
                 "shasum": ""
             },
             "require": {
@@ -334,7 +336,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2013-11-11 21:11:45"
+            "time": "2014-06-11 14:25:29"
         }
     ],
     "packages-dev": [
@@ -758,9 +760,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "dsawardekar/imgur-api": 20
+    },
     "platform": [
 
     ],

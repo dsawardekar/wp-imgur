@@ -1,6 +1,6 @@
 <?php
 
-namespace WpImgur;
+namespace WpImgur\Ajax;
 
 class ConfigController extends \Arrow\Ajax\Controller {
 
@@ -37,6 +37,7 @@ class ConfigController extends \Arrow\Ajax\Controller {
   }
 
   function verifyPin() {
+    \Arrow\Options\Validator::loadStaticRules();
     $validator = new \Valitron\Validator($this->params);
     $validator->rule('required', 'pin');
     $validator->rule('safeText', 'pin');
