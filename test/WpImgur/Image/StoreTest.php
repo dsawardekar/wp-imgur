@@ -1,6 +1,6 @@
 <?php
 
-namespace WpImgur\Models;
+namespace WpImgur\Image;
 
 use Encase\Container;
 
@@ -14,8 +14,8 @@ class ImageStoreTest extends \WP_UnitTestCase {
 
     $this->container = new Container();
     $this->container
-      ->factory('image', 'WpImgur\Models\Image')
-      ->singleton('imageStore', 'WpImgur\Models\ImageStore');
+      ->factory('image', 'WpImgur\Image\Image')
+      ->singleton('imageStore', 'WpImgur\Image\Store');
 
     $this->store = $this->container->lookup('imageStore');
   }
@@ -26,7 +26,7 @@ class ImageStoreTest extends \WP_UnitTestCase {
 
   function test_it_can_create_images() {
     $image = $this->store->container->lookup('image');
-    $this->assertInstanceOf('WpImgur\Models\Image', $image);
+    $this->assertInstanceOf('WpImgur\Image\Image', $image);
   }
 
   function test_it_returns_empty_list_of_images_for_unknown_attachment_id() {

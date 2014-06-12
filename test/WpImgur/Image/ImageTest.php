@@ -1,6 +1,6 @@
 <?php
 
-namespace WpImgur\Models;
+namespace WpImgur\Image;
 
 use Encase\Container;
 
@@ -14,7 +14,7 @@ class ImageTest extends \WP_UnitTestCase {
 
     $this->container = new Container();
     $this->container
-      ->factory('image', 'WpImgur\Models\Image');
+      ->factory('image', 'WpImgur\Image\Image');
 
     $this->image = $this->container->lookup('image');
   }

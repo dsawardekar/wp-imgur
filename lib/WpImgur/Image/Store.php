@@ -1,8 +1,8 @@
 <?php
 
-namespace WpImgur\Models;
+namespace WpImgur\Image;
 
-class ImageStore {
+class Store {
 
   public $container;
   public $images;

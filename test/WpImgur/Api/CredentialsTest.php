@@ -41,6 +41,7 @@ class CredentialsTest extends \WP_UnitTestCase {
   }
 
   function test_it_can_store_credentials_as_options() {
+    $this->cred->load();
     $this->cred->setAccessToken('foo');
     $this->cred->setAccessTokenExpiry(60);
     $this->cred->setRefreshToken('bar');

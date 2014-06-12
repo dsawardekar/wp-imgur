@@ -1,15 +1,15 @@
 <?php
 
-namespace WpImgur\Models;
+namespace WpImgur\Image;
 
-class ImagePostTypeTest extends \WP_UnitTestCase {
+class PostTypeTest extends \WP_UnitTestCase {
 
   public $postType;
 
   function setUp() {
     parent::setUp();
 
-    $this->postType = new ImagePostType();
+    $this->postType = new PostType();
   }
 
   function test_it_has_a_name() {

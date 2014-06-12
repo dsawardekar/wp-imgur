@@ -1,8 +1,8 @@
 <?php
 
-namespace WpImgur\Models;
+namespace WpImgur\Image;
 
-class ImagePostType {
+class PostType {
 
   function register() {
     register_post_type(
