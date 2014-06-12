@@ -69,6 +69,13 @@ class ImageTest extends \WP_UnitTestCase {
     $this->assertEquals(100, $this->image->getHeight());
   }
 
+  function test_it_knows_its_size() {
+    $attr = array('width' => 100, 'height' => 200);
+    $this->image->setAttributes($attr);
+
+    $this->assertEquals('100x200', $this->image->getSize());
+  }
+
   function test_it_knows_its_mime_type() {
     $attr = array('mime-type' => 'image/jpeg');
     $this->image->setAttributes($attr);

@@ -12,32 +12,6 @@ class Image {
     '1024x1024' => 'h'
   );
 
-  function findAll($attachmentMeta) {
-    $images = array();
-    $sizes  = $attachmentMeta['sizes'];
-    $image  = $this->container->lookup('image');
-
-    $attr = array(
-      'width'  => $attachmentMeta['width'],
-      'height' => $attachmentMeta['height'],
-      'file'   => $attachmentMeta['file']
-    );
-
-    $image->setKind('original');
-    $image->setMeta($attachmentMeta['image_meta']);
-    $image->setAttributes($attr);
-    array_push($images, $image);
-
-    foreach ($sizes as $kind => $attr) {
-      $image = $this->container->lookup('image');
-      $image->setAttributes($attr);
-
-      array_push($images, $image);
-    }
-
-    return $images;
-  }
-
   public $container;
   public $attributes;
   public $kind;
@@ -81,7 +55,11 @@ class Image {
   }
 
   function getMeta() {
-    return $this->meta;
+    if ($this->hasParent()) {
+      return $this->getParent()->getMeta();
+    } else {
+      return $this->meta;
+    }
   }
 
   function setMeta($meta) {
@@ -94,6 +72,10 @@ class Image {
 
   function getHeight() {
     return $this->getAttribute('height');
+  }
+
+  function getSize() {
+    return $this->getWidth() . 'x' . $this->getHeight();
   }
 
   function getMimeType() {
@@ -135,8 +117,7 @@ class Image {
   }
 
   function isCustomSize() {
-    $key = $this->getWidth() . 'x' . $this->getHeight();
-    return array_key_exists($key, self::$standardSizes);
+    return array_key_exists($this->getSize(), self::$standardSizes);
   }
 
   function isOriginal() {
