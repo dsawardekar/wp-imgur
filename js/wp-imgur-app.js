@@ -325,8 +325,15 @@ WpImgur.Router.reopen({
 });
 
 WpImgur.ApplicationRoute = Em.Route.extend({
+  authModel: null,
   model: function() {
-    return WpImgur.AuthModel.load();
+    var model = this.get('authModel');
+    if (!model) {
+      model = WpImgur.AuthModel.load();
+      this.set('authModel', model);
+    }
+
+    return model;
   },
 
   afterModel: function(model) {

@@ -4,6 +4,10 @@ namespace WpImgur\Ajax;
 
 class AuthController extends \Arrow\Ajax\Controller {
 
+  public $optionsStore;
+  public $imgurAdapter;
+  public $syncPreparer;
+
   function adminActions() {
     return array_merge(
       parent::adminActions(),
@@ -23,7 +27,7 @@ class AuthController extends \Arrow\Ajax\Controller {
   function needs() {
     return array_merge(
       parent::needs(),
-      array('optionsStore', 'imgurAdapter')
+      array('optionsStore', 'imgurAdapter', 'syncPreparer')
     );
   }
 
@@ -44,6 +48,8 @@ class AuthController extends \Arrow\Ajax\Controller {
 
       try {
         $result = $this->imgurAdapter->verifyPin($pin);
+        $this->syncPreparer->prepare();
+
         return $result;
       } catch (\Imgur\Exception $error) {
         return $this->error($error->getMessage());

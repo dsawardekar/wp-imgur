@@ -24,5 +24,14 @@
   "test/WpImgur/Attachment/*Test.php": {
     "type": "test",
     "alternate": "lib/WpImgur/Attachment/%s.php"
+  },
+
+  "lib/WpImgur/Ajax/*.php": {
+    "type": "ajax",
+    "test": "test/WpImgur/Ajax/%sTest.php"
+  },
+  "test/WpImgur/Ajax/*Test.php": {
+    "type": "test",
+    "alternate": "lib/WpImgur/Ajax/%s.php"
   }
 }

@@ -10,13 +10,11 @@ class Plugin extends \Arrow\Plugin {
     $this->container
       ->object('pluginMeta'          ,  new PluginMeta($file))
 
-      ->packager('assetPackager'     ,  'Arrow\Asset\Packager')
-      ->packager('optionsPackager'   ,  'Arrow\Options\Packager')
-      ->packager('imgurPackager'     ,  'WpImgur\Api\Packager')
-
-      ->singleton('imagePostType'    ,  'WpImgur\Models\ImagePostType')
-      ->singleton('authController' ,  'WpImgur\Ajax\AuthController')
-      ->singleton('syncController'   ,  'WpImgur\Ajax\SyncController');
+      ->packager('optionsPackager'    ,  'Arrow\Options\Packager')
+      ->packager('imgurApiPackager'   ,  'WpImgur\Api\Packager')
+      ->packager('imagePackager'      ,  'WpImgur\Image\Packager')
+      ->packager('attachmentPackager' ,  'WpImgur\Attachment\Packager')
+      ->packager('ajaxPackager'       ,  'WpImgur\Ajax\Packager');
   }
 
   function enable() {

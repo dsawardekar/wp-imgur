@@ -4,49 +4,37 @@ namespace WpImgur\Ajax;
 
 class SyncController extends \Arrow\Ajax\Controller {
 
+  public $attachmentPostType;
+
   function needs() {
     return array_merge(
       parent::needs(),
-      array('imagePostType')
+      array('attachmentPostType')
     );
   }
 
   function index() {
-    $items = $this->imagePostType->findImages();
-    $this->sendSuccess($items);
+    return $this->attachmentPostType->findAll();
   }
 
   function update() {
-    $validator = new \Valitron\Validator($this->params);
+    $validator = $this->getValidator();
     $validator->rule('required', 'id');
     $validator->rule('integer', 'id');
 
     if ($validator->validate()) {
-      $id           = $this->params['id'];
-      $image        = $this->imagePostType->findImage($id);
-      $uploads = wp_upload_dir();
-
-      if (array_key_exists('thumbnail', $image['sizes'])) {
-        $file = $image['file'];
-        $path = $uploads['basedir'] . '/' . $file;
-        if (file_exists($path)) {
-          $file = dirname($file) . '/' . $image['sizes']['thumbnail']['file'];
-          $thumbnail = $uploads['baseurl'] . '/' . $file;
-        } else {
-          $thumbnail = '';
-        }
-      } else {
-        $thumbnail = '';
-      }
+      $id     = $this->params['id'];
+      $images = $this->attachmentPostType->find($id);
+      $image  = $images[1];
 
       $result = array(
-        'thumbnail' => $thumbnail,
-        'name' => $image['file']
+        'thumbnail' => $image->getUrl(),
+        'name'      => $image->getFilename()
       );
 
-      $this->sendSuccess($result);
+      return $result;
     } else {
-      $this->sendError($validator->errors());
+      return $this->error($validator->errors());
     }
   }
 

@@ -4,9 +4,12 @@ namespace WpImgur\Api;
 
 class Credentials extends \Imgur\Credentials {
 
-  protected $didLoad      = false;
+  public $optionsStore;
+
   protected $clientId     = '1c354b6654a4a6d';
   protected $clientSecret = '48535b387a4b995b370d3cbbacaffca94b125da2';
+
+  protected $didLoad      = false;
 
   function needs() {
     return array('optionsStore');
@@ -21,44 +24,47 @@ class Credentials extends \Imgur\Credentials {
       return;
     }
 
-    $store = $this->optionsStore;
-
-    $this->setAccessToken($store->getOption('accessToken'));
-    $this->accessTokenExpiry = $store->getOption('accessTokenExpiry');
-    $this->setRefreshToken($store->getOption('refreshToken'));
-
+    $this->optionsStore->load();
     $this->didLoad = true;
   }
 
   function save() {
-    $store = $this->optionsStore;
-    $store->setOption('accessToken', $this->getAccessToken());
-    $store->setOption('accessTokenExpiry', $this->getAccessTokenExpiry());
-    $store->setOption('refreshToken', $this->getRefreshToken());
-
-    $store->save();
+    $this->optionsStore->save();
   }
 
-  /* if tokens are not loaded, an attempt is made to load them
-   * first */
+  /* overridden to use credentials stored in options */
   function getAccessToken() {
-    $this->load();
-    return parent::getAccessToken();
+    return $this->getOption('accessToken');
+  }
+
+  function setAccessToken($accessToken) {
+    $this->setOption('accessToken', $accessToken);
   }
 
   function getAccessTokenExpiry() {
-    $this->load();
-    return parent::getAccessTokenExpiry();
+    return $this->getOption('accessTokenExpiry');
   }
 
-  function getAccessTokenDuration() {
-    $this->load();
-    return parent::getAccessTokenDuration();
+  function setAccessTokenExpiry($expireIn) {
+    $expiry   = strtotime("+{$expireIn} seconds");
+    $this->setOption('accessTokenExpiry', $expiry);
   }
 
   function getRefreshToken() {
-    $this->load();
-    return parent::getRefreshToken();
+    return $this->getOption('refreshToken');
+  }
+
+  function setRefreshToken($refreshToken) {
+    $this->setOption('refreshToken', $refreshToken);
+  }
+
+  /* helpers */
+  function getOption($name) {
+    return $this->optionsStore->getOption($name);
+  }
+
+  function setOption($name, $value) {
+    $this->optionsStore->setOption($name, $value);
   }
 
 }
