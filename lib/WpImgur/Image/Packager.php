@@ -9,7 +9,8 @@ class Packager {
       ->factory('image', 'WpImgur\Image\Image')
       ->factory('imageStore', 'WpImgur\Image\Store')
       ->singleton('imagePostType', 'WpImgur\Image\PostType')
-      ->singleton('imageUploader', 'WpImgur\Image\Uploader');
+      ->singleton('imageUploader', 'WpImgur\Image\Uploader')
+      ->singleton('imageSynchronizer', 'WpImgur\Image\Synchronizer');
   }
 
 }

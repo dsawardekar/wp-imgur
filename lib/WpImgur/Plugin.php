@@ -18,7 +18,12 @@ class Plugin extends \Arrow\Plugin {
   }
 
   function enable() {
+    add_action('admin_init', array($this, 'initAdmin'));
     add_action('init', array($this, 'initFrontEnd'));
+  }
+
+  function initAdmin() {
+    $this->lookup('imageSynchronizer')->enable();
   }
 
   function initFrontEnd() {
