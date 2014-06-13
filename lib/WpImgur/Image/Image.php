@@ -75,7 +75,11 @@ class Image {
   }
 
   function getSize() {
-    return $this->getWidth() . 'x' . $this->getHeight();
+    if ($this->isOriginal()) {
+      return 'original';
+    } else {
+      return $this->getWidth() . 'x' . $this->getHeight();
+    }
   }
 
   function getMimeType() {

@@ -98,7 +98,7 @@ class PostTypeTest extends \WP_UnitTestCase {
 
     $image = $images[0];
     $this->assertEquals('original', $image->getKind());
-    $this->assertEquals('2400x1500', $image->getSize());
+    $this->assertEquals('original', $image->getSize());
     $this->assertEquals('2012/12/foo.jpg', $image->getFilename());
 
     $image = $images[1];

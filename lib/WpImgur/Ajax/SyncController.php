@@ -5,6 +5,7 @@ namespace WpImgur\Ajax;
 class SyncController extends \Arrow\Ajax\Controller {
 
   public $attachmentPostType;
+  public $imageStore;
 
   function needs() {
     return array_merge(
