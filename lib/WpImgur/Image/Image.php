@@ -121,7 +121,7 @@ class Image {
   }
 
   function isCustomSize() {
-    return array_key_exists($this->getSize(), self::$standardSizes);
+    return !array_key_exists($this->getSize(), self::$standardSizes);
   }
 
   function isOriginal() {
@@ -132,4 +132,7 @@ class Image {
     return !is_null($this->getParent());
   }
 
+  function isUploadable() {
+    return ($this->isOriginal() || $this->isCustomSize()) && $this->fileExists();
+  }
 }

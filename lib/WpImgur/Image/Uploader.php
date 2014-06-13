@@ -28,9 +28,9 @@ class Uploader {
 
   function upload($image) {
     if ($this->getMode() === 'push') {
-      $this->uploadByPush($image);
+      return $this->uploadByPush($image);
     } else {
-      $this->uploadByPull($image);
+      return $this->uploadByPull($image);
     }
   }
 

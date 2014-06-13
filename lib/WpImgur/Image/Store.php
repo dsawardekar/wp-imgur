@@ -60,13 +60,22 @@ class Store {
       return;
     }
 
-    $this->images    = $this->imagePostType->find($this->getSlug());
+    $this->images    = $this->fetch();
     $this->didLoad   = true;
     $this->didChange = false;
   }
 
   function exists() {
     return $this->id !== 0;
+  }
+
+  function fetch() {
+    $images = $this->imagePostType->find($this->getSlug());
+    if ($images === false) {
+      $images = array();
+    }
+
+    return $images;
   }
 
   function save() {

@@ -79,7 +79,8 @@ class PostType {
       'hierarchical'        => false,
       'rewrite'             => false,
       'query_var'           => false,
-      'can_export'          => true
+      'can_export'          => true,
+      'delete_with_user'    => false
     );
   }
 
