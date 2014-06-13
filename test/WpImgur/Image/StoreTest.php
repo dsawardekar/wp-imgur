@@ -80,6 +80,16 @@ class ImageStoreTest extends \WP_UnitTestCase {
     $this->assertTrue($this->store->exists());
   }
 
+  function test_it_wont_save_image_store_unless_changed() {
+    $this->store->addImage('100x100', 'foo');
+    $actual = $this->store->save();
+
+    $this->assertTrue($actual);
+
+    $actual = $this->store->save();
+    $this->assertFalse($actual);
+  }
+
   function test_it_can_load_stored_image_sizes() {
     $this->store->setSlug('foo');
     $this->store->addImage('100x100', 'one');

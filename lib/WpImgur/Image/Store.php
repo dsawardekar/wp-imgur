@@ -10,6 +10,7 @@ class Store {
   public $images  = array();
   public $slug    = null;
   public $didLoad = false;
+  public $didChange = false;
   public $id      = 0;
 
   function needs() {
@@ -22,10 +23,12 @@ class Store {
 
   function addImage($size, $url) {
     $this->images[$size] = $url;
+    $this->didChange = true;
   }
 
   function removeImage($size) {
     unset($this->images[$size]);
+    $this->didChange = true;
   }
 
   function count() {
@@ -48,13 +51,18 @@ class Store {
     return $this->didLoad;
   }
 
+  function changed() {
+    return $this->didChange;
+  }
+
   function load() {
     if ($this->loaded()) {
       return;
     }
 
-    $this->images  = $this->imagePostType->find($this->getSlug());
-    $this->didLoad = true;
+    $this->images    = $this->imagePostType->find($this->getSlug());
+    $this->didLoad   = true;
+    $this->didChange = false;
   }
 
   function exists() {
@@ -62,6 +70,10 @@ class Store {
   }
 
   function save() {
+    if (!$this->changed()) {
+      return false;
+    }
+
     if ($this->exists()) {
       $result = $this->imagePostType->update(
         $this->id, $this->images
@@ -79,6 +91,7 @@ class Store {
     if (is_wp_error($result)) {
       throw new \Exception($result->get_error_message());
     } else {
+      $this->didChange = false;
       return true;
     }
   }
