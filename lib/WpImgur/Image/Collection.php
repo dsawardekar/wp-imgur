@@ -45,17 +45,41 @@ class Collection {
   function hasImage($postName, $size) {
     $slug = $this->toSlug($postName);
 
+    /* for standard sizes, we only need to know if original
+     * exists */
+    if ($this->isStandardSize($size)) {
+      $size = 'original';
+    }
+
     return array_key_exists($slug, $this->images) &&
       array_key_exists($size, $this->images[$slug]);
   }
 
   function getImageUrl($postName, $size) {
     $slug = $this->toSlug($postName);
-    return $this->images[$slug][$size];
+
+    if (!$this->isStandardSize($size)) {
+      return $this->images[$slug][$size];
+    } else {
+      return $this->getStandardUrl($slug, $size);
+    }
+  }
+
+  function getStandardUrl($slug, $size) {
+    $original  = $this->images[$slug]['original'];
+    $info      = pathinfo($original);
+    $extension = $info['extension'];
+    $suffix    = Image::$standardSizes[$size];
+
+    return $info['dirname'] . '/' . $info['filename'] . $suffix . '.' . $extension;
   }
 
   function toSlug($postName) {
     return $this->imagePostType->toSlug($postName);
+  }
+
+  function isStandardSize($size) {
+    return array_key_exists($size, Image::$standardSizes);
   }
 
 }

@@ -86,12 +86,53 @@ class CollectionTest extends \WP_UnitTestCase {
     $this->assertFalse($actual);
   }
 
+  function test_it_wont_find_for_standard_size_without_original() {
+    $this->insertImage('foo', '1x1', 'one');
+    $this->collection->load(array('foo'));
+
+    $this->assertFalse($this->collection->hasImage('foo', '160x160'));
+  }
+
+  function test_it_will_find_for_any_standard_size_if_original_is_present() {
+    $this->insertImage('foo', 'original', 'one');
+    $this->collection->load(array('foo'));
+
+    $this->assertTrue($this->collection->hasImage('foo', '90x90'));
+    $this->assertTrue($this->collection->hasImage('foo', '160x160'));
+    $this->assertTrue($this->collection->hasImage('foo', '320x320'));
+    $this->assertTrue($this->collection->hasImage('foo', '640x640'));
+    $this->assertTrue($this->collection->hasImage('foo', '1024x1024'));
+  }
+
   function test_it_can_find_url_for_valid_image_variant() {
     $this->insertImage('foo', '1x1', 'one');
     $this->collection->load(array('foo'));
 
     $actual = $this->collection->getImageUrl('foo', '1x1');
     $this->assertEquals('one', $actual);
+  }
+
+  function test_it_can_find_standard_url_for_standard_sizes() {
+    $this->insertImage('foo', 'original', 'http://foo.com/one.jpg');
+    $this->collection->load(array('foo'));
+
+    $url = $this->collection->getImageUrl('foo', 'original');
+    $this->assertEquals('http://foo.com/one.jpg', $url);
+
+    $url = $this->collection->getImageUrl('foo', '90x90');
+    $this->assertEquals('http://foo.com/ones.jpg', $url);
+
+    $url = $this->collection->getImageUrl('foo', '160x160');
+    $this->assertEquals('http://foo.com/onet.jpg', $url);
+
+    $url = $this->collection->getImageUrl('foo', '320x320');
+    $this->assertEquals('http://foo.com/onem.jpg', $url);
+
+    $url = $this->collection->getImageUrl('foo', '640x640');
+    $this->assertEquals('http://foo.com/onel.jpg', $url);
+
+    $url = $this->collection->getImageUrl('foo', '1024x1024');
+    $this->assertEquals('http://foo.com/oneh.jpg', $url);
   }
 
 }
