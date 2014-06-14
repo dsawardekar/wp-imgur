@@ -7,12 +7,16 @@ class SrcReplacer {
   public $container;
   public $imageCollection;
 
-  public $variants = array();
-  public $prefix;
+  public $variants   = array();
+  public $prefix     = null;
   public $didReplace = false;
 
   function needs() {
     return array('imageCollection');
+  }
+
+  function enable() {
+    add_filter('the_content', array($this, 'replace'), '90');
   }
 
   function replace($content) {
@@ -43,7 +47,7 @@ class SrcReplacer {
 
     if ($result >= 1) {
       $this->variants  = array();
-      $srcPattern = "/src=['\"](.*)['\"]/";
+      $srcPattern = "/src=['\"]([^'\"]*?)['\"]/";
 
       foreach ($matches[0] as $img) {
         $result = preg_match($srcPattern, $img, $match);
