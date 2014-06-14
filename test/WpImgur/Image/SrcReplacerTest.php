@@ -116,6 +116,7 @@ class SrcReplacerTest extends \WP_UnitTestCase {
     $html = 'foo';
     $actual = $this->replacer->replace($html);
     $this->assertEquals('foo', $actual);
+    $this->assertFalse($this->replacer->replaced());
   }
 
   function test_it_can_replace_content_with_only_external_images() {
@@ -125,6 +126,7 @@ class SrcReplacerTest extends \WP_UnitTestCase {
 
     $actual = $this->replacer->replace($html);
     $this->assertEquals($html, $actual);
+    $this->assertFalse($this->replacer->replaced());
   }
 
   function test_it_can_replace_content_with_valid_images_without_storage() {
@@ -135,6 +137,7 @@ class SrcReplacerTest extends \WP_UnitTestCase {
 
     $actual = $this->replacer->replace($html);
     $this->assertEquals($html, $actual);
+    $this->assertFalse($this->replacer->replaced());
   }
 
   function test_it_can_replace_content_with_valid_images_with_stored_originals() {
@@ -153,6 +156,7 @@ class SrcReplacerTest extends \WP_UnitTestCase {
 
     $actual = $this->replacer->replace($html);
     $this->assertEquals($expected, $actual);
+    $this->assertTrue($this->replacer->replaced());
   }
 
   function test_it_can_replace_content_with_mixed_images() {
@@ -169,6 +173,7 @@ class SrcReplacerTest extends \WP_UnitTestCase {
 
     $actual = $this->replacer->replace($html);
     $this->assertEquals($expected, $actual);
+    $this->assertTrue($this->replacer->replaced());
   }
 
   function test_it_can_replace_content_with_multiple_variants() {
