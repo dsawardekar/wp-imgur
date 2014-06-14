@@ -85,6 +85,13 @@ class PostTypeTest extends \WP_UnitTestCase {
     $this->assertFalse($post);
   }
 
+  function test_it_wont_find_anything_for_empty_post_names() {
+    $this->postType->register();
+
+    $images = $this->postType->findBy(array());
+    $this->assertEquals(0, count($images));
+  }
+
   function test_it_can_find_list_of_stored_images_by_post_names() {
     $this->postType->register();
     $this->postType->create('image 1', array('foo' => 1));
