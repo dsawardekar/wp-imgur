@@ -8,6 +8,13 @@ class AuthController extends \Arrow\Ajax\Controller {
   public $imgurAdapter;
   public $syncPreparer;
 
+  function needs() {
+    return array_merge(
+      parent::needs(),
+      array('optionsStore', 'imgurAdapter', 'syncPreparer')
+    );
+  }
+
   function adminActions() {
     return array_merge(
       parent::adminActions(),
@@ -21,13 +28,6 @@ class AuthController extends \Arrow\Ajax\Controller {
       array(
         'verifyPin' => array('POST')
       )
-    );
-  }
-
-  function needs() {
-    return array_merge(
-      parent::needs(),
-      array('optionsStore', 'imgurAdapter', 'syncPreparer')
     );
   }
 
