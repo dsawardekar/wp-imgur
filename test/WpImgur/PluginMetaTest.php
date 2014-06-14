@@ -33,4 +33,12 @@ class PluginMetaTest extends \WP_UnitTestCase {
     $this->assertLessThan($now, $expiry);
   }
 
+  function test_it_has_empty_album_id() {
+    $this->assertEquals('', $this->meta->getDefaultOptions()['album']);
+  }
+
+  function test_it_uses_push_mode_by_default() {
+    $this->assertEquals('push', $this->meta->getDefaultOptions()['uploadMode']);
+  }
+
 }
