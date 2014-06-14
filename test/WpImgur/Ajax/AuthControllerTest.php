@@ -50,7 +50,8 @@ class AuthControllerTest extends \WP_UnitTestCase {
   }
 
   function test_it_only_allows_verify_pin_over_post() {
-    $this->assertEquals(array('POST'), $this->controller->actionMethods()['verifyPin']);
+    $methods = $this->controller->actionMethods();
+    $this->assertEquals(array('POST'), $methods['verifyPin']);
   }
 
   function test_it_knows_if_plugin_is_not_authorized() {
