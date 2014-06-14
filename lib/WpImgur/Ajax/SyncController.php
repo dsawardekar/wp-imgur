@@ -18,7 +18,7 @@ class SyncController extends \Arrow\Ajax\Controller {
   function index() {
     $items = $this->attachmentPostType->findAll();
     //return array_slice($items, 0, 1);
-    return array_slice($items, 0, 5);
+    //return array_slice($items, 0, 5);
     return $items;
   }
 
