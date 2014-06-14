@@ -31,10 +31,6 @@ class UploaderTest extends \WP_UnitTestCase {
     return $this->container->lookup($key);
   }
 
-  function test_it_has_plugin_meta() {
-    $this->assertSame($this->pluginMeta, $this->uploader->pluginMeta);
-  }
-
   function test_it_has_album_id() {
     $this->store->setOption('album', 'foo');
     $this->assertEquals('foo', $this->uploader->getAlbum());

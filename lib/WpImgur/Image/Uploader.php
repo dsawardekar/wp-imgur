@@ -5,12 +5,12 @@ namespace WpImgur\Image;
 class Uploader {
 
   public $container;
-  public $pluginMeta;
   public $optionsStore;
+  public $imgurImageRepo;
 
   function needs() {
     return array(
-      'pluginMeta', 'optionsStore', 'imgurImageRepo'
+      'optionsStore', 'imgurImageRepo'
     );
   }
 
