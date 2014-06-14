@@ -54,11 +54,12 @@ class PostType {
     global $wpdb;
 
     $inClause = $this->inClauseFor('post_name', $postNames);
+    $postType = $this->getName();
     $sql = <<<SQL
     SELECT post_name, post_content
     From $wpdb->posts
     WHERE
-      post_type = 'imgur_image'
+      post_type = '$postType'
 SQL;
 
     if ($inClause !== '') {
@@ -66,30 +67,6 @@ SQL;
     }
 
     return $wpdb->get_results($sql, ARRAY_N);
-  }
-
-  function inClauseFor($column, $items) {
-    global $wpdb;
-
-    $n = count($items);
-    if ($n === 0) {
-      return '';
-    }
-
-    $sql = $column . ' IN (';
-
-    for ($i = 0; $i < $n; $i++) {
-      $item = $this->toSlug($items[$i]);
-      $sql .= $wpdb->prepare('%s', $item);
-
-      if ($i < ($n - 1)) {
-        $sql .= ',';
-      }
-    }
-
-    $sql .= ')';
-
-    return $sql;
   }
 
   function getName() {
@@ -126,6 +103,30 @@ SQL;
     } else {
       return array();
     }
+  }
+
+  function inClauseFor($column, $items) {
+    global $wpdb;
+
+    $n = count($items);
+    if ($n === 0) {
+      return '';
+    }
+
+    $sql = $column . ' IN (';
+
+    for ($i = 0; $i < $n; $i++) {
+      $item = $this->toSlug($items[$i]);
+      $sql .= $wpdb->prepare('%s', $item);
+
+      if ($i < ($n - 1)) {
+        $sql .= ',';
+      }
+    }
+
+    $sql .= ')';
+
+    return $sql;
   }
 
 }

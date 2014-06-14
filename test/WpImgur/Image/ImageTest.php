@@ -139,6 +139,12 @@ class ImageTest extends \WP_UnitTestCase {
     $this->assertTrue($this->image->hasParent());
   }
 
+  function test_it_knows_original_image_is_not_uploadable_if_absent() {
+    $this->image->setAttributes(array('file' => 'foo'));
+    $this->image->setKind('original');
+    $this->assertFalse($this->image->isUploadable());
+  }
+
   function test_it_has_filepath_with_parent_image() {
     $image = $this->container->lookup('image');
     $image->setAttributes(array(
