@@ -7,11 +7,11 @@ class Store {
   public $container;
   public $imagePostType;
 
-  public $images  = array();
-  public $slug    = null;
-  public $didLoad = false;
+  public $images    = array();
+  public $slug      = null;
+  public $didLoad   = false;
   public $didChange = false;
-  public $id      = 0;
+  public $id        = 0;
 
   function needs() {
     return array('imagePostType');
