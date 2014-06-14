@@ -7,6 +7,8 @@ class Synchronizer {
   public $container;
   public $attachmentPostType;
   public $imageUploader;
+  public $ajaxJsonPrinter;
+  public $hookMode = false;
 
   function needs() {
     return array('attachmentPostType', 'imageUploader', 'ajaxJsonPrinter');
@@ -18,6 +20,7 @@ class Synchronizer {
 
   function onAttachmentMetaChange($metaId, $postId, $metaKey, $metaValue) {
     if ($metaKey === '_wp_attachment_metadata') {
+      $this->hookMode = true;
       $this->sync($postId);
     }
   }
@@ -52,6 +55,48 @@ class Synchronizer {
     );
   }
 
+  function syncImage($image, $imageStore) {
+    $size = $image->getSize();
+
+    if (!$imageStore->hasImage($size)) {
+      return $this->uploadAndSave($image, $imageStore);
+    } elseif (!$this->imageUrlExists($imageStore->getImageUrl($size))) {
+      return $this->uploadAndSave($image, $imageStore);
+    } else {
+      return $imageStore->getImageUrl($size);
+    }
+  }
+
+  function uploadAndSave($image, $imageStore) {
+    try {
+      $uploadedImage = $this->uploadImage($image);
+      if ($uploadedImage !== false) {
+        $link = $uploadedImage['link'];
+        $imageStore->addImage($image->getSize(), $link);
+
+        return $link;
+      } else {
+        return null;
+      }
+    } catch (\Imgur\Exception $e) {
+      $error = "WP-Imgur Image Upload Failed: {$image->getUrl()} - " . $e->getMessage();
+      if (!$this->hookMode) {
+        $this->ajaxJsonPrinter->sendError($error);
+      } elseif (!defined('PHPUNIT_RUNNER')) {
+        error_log($error);
+      }
+    }
+  }
+
+  function uploadImage($image) {
+    if ($image->isUploadable()) {
+      return $this->imageUploader->upload($image);
+    } else {
+      return false;
+    }
+  }
+
+  /* helpers */
   function imagesForAttachment($id) {
     return $this->attachmentPostType->find($id);
   }
@@ -68,45 +113,13 @@ class Synchronizer {
     return $imageStore;
   }
 
-  function syncImage($image, $imageStore) {
-    $size = $image->getSize();
-
-    if (!$imageStore->hasImage($size)) {
-      return $this->uploadAndSave($image, $imageStore);
-    } elseif (!$this->imageUrlExists($imageStore->getImageUrl($size))) {
-      return $this->uploadAndSave($image, $imageStore);
-    } else {
-      return $imageStore->getImageUrl($size);
-    }
-  }
-
   function imageUrlExists($url) {
-    $response = \Requests::head($url);
-    return $response->status_code === 200 && $response->redirects === 0;
-  }
-
-  function uploadAndSave($image, $imageStore) {
     try {
-      $uploadedImage = $this->uploadImage($image);
-      if ($uploadedImage !== false) {
-        $link = $uploadedImage['link'];
-        $imageStore->addImage($image->getSize(), $link);
-
-        return $link;
-      } else {
-        return null;
-      }
-    } catch (\Imgur\Exception $e) {
-      $this->ajaxJsonPrinter->sendError("WP-Imgur Image Upload Failed: {$image->getUrl()} - " . $e->getMessage());
-    }
-  }
-
-  function uploadImage($image) {
-    if ($image->isUploadable()) {
-      //return $this->imageUploader->upload($image);
-      return array('id' => 'foo', 'link' => $image->getUrl());
-    } else {
+      $response = \Requests::head($url);
+      return $response->status_code === 200 && $response->redirects === 0;
+    } catch (\Exception $e) {
       return false;
     }
   }
+
 }
