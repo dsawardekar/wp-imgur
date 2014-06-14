@@ -95,7 +95,7 @@ class SrcReplacerTest extends \WP_UnitTestCase {
     $this->assertEquals('foo.jpg', $variant['slug']);
   }
 
-  function test_it_can_find_variant_for_src_with_variant() {
+  function test_it_can_find_variant_for_src_with_variant_suffix() {
     $src = site_url() . '/wp-content/uploads/foo-10x20.jpg';
     $variant = $this->replacer->variantFor($src);
 
