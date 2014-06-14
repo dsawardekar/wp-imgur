@@ -200,4 +200,39 @@ class SrcReplacerTest extends \WP_UnitTestCase {
     $this->assertEquals($expected, $actual);
     $this->assertTrue($this->replacer->replaced());
   }
+
+  function newImg($src, $href = null) {
+    if (is_null($href)) {
+      $href = $src;
+    }
+
+    return "<a href='$href'><img src='$src'></a>";
+  }
+
+  function test_it_can_replace_content_with_multiple_variants_with_links() {
+    $prefix = site_url() . '/wp-content/uploads';
+    $orig = "$prefix/lorem.jpg";
+    $html  = $this->newImg($orig);
+    $html .= $this->newImg("$prefix/lorem-10x20.jpg", $orig);
+    $html .= $this->newImg("$prefix/lorem-30x40.jpg", $orig);
+    $html .= $this->newImg("$prefix/lorem-50x60.jpg", $orig);
+
+    $imageStore = $this->container->lookup('imageStore');
+    $imageStore->setSlug('lorem-jpg');
+    $imageStore->addImage('original', 'lorem-original');
+    $imageStore->addImage('10x20', 'lorem-10x20-r');
+    $imageStore->addImage('30x40', 'lorem-30x40-r');
+    $imageStore->addImage('50x60', 'lorem-50x60-r');
+    $imageStore->save();
+
+    $expected  = "<a href='lorem-original'><img src='lorem-original'></a>";
+    $expected .= "<a href='lorem-original'><img src='lorem-10x20-r'></a>";
+    $expected .= "<a href='lorem-original'><img src='lorem-30x40-r'></a>";
+    $expected .= "<a href='lorem-original'><img src='lorem-50x60-r'></a>";
+
+    $actual = $this->replacer->replace($html);
+
+    $this->assertEquals($expected, $actual);
+    $this->assertTrue($this->replacer->replaced());
+  }
 }

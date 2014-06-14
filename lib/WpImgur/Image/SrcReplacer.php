@@ -11,6 +11,9 @@ class SrcReplacer {
   public $prefix     = null;
   public $didReplace = false;
 
+  public $srcPattern  = "/src=['\"]([^'\"]*?)['\"]/";
+  public $hrefPattern = "/href=['\"]([^'\"]*?)['\"]/";
+
   function needs() {
     return array('imageCollection');
   }
@@ -42,15 +45,19 @@ class SrcReplacer {
   }
 
   function scan($content) {
-    $matches = array();
-    $result  = preg_match_all('/<img[^>]+>/', $content, $matches);
+    $this->variants  = array();
+
+    $this->scanTag($content, 'img', $this->srcPattern);
+    $this->scanTag($content, 'a', $this->hrefPattern);
+  }
+
+  function scanTag($content, $tag, $pattern) {
+    $tagPattern = "/<{$tag}[^>]+>/";
+    $result  = preg_match_all($tagPattern, $content, $matches);
 
     if ($result >= 1) {
-      $this->variants  = array();
-      $srcPattern = "/src=['\"]([^'\"]*?)['\"]/";
-
       foreach ($matches[0] as $img) {
-        $result = preg_match($srcPattern, $img, $match);
+        $result = preg_match($pattern, $img, $match);
 
         if ($result === 1) {
           $src = $match[1];
