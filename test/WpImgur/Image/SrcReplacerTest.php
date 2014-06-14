@@ -28,7 +28,8 @@ class SrcReplacerTest extends \WP_UnitTestCase {
 
   function test_it_knows_valid_replaceable_prefix() {
     $actual = $this->replacer->replaceablePrefix();
-    $expected = wp_upload_dir()['baseurl'];
+    $uploads = wp_upload_dir();
+    $expected = $uploads['baseurl'];
     $this->assertStringStartsWith($expected, $actual);
   }
 

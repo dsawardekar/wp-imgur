@@ -29,16 +29,19 @@ class PluginMetaTest extends \WP_UnitTestCase {
 
   function test_it_has_expired_default_access_token_expiry() {
     $now    = strtotime('now');
-    $expiry = $this->meta->getDefaultOptions()['accessTokenExpiry'];
+    $options = $this->meta->getDefaultOptions();
+    $expiry = $options['accessTokenExpiry'];
     $this->assertLessThan($now, $expiry);
   }
 
   function test_it_has_empty_album_id() {
-    $this->assertEquals('', $this->meta->getDefaultOptions()['album']);
+    $options = $this->meta->getDefaultOptions();
+    $this->assertEquals('', $options['album']);
   }
 
   function test_it_uses_push_mode_by_default() {
-    $this->assertEquals('push', $this->meta->getDefaultOptions()['uploadMode']);
+    $options = $this->meta->getDefaultOptions();
+    $this->assertEquals('push', $options['uploadMode']);
   }
 
 }

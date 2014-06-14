@@ -20,28 +20,34 @@ class PostTypeTest extends \WP_UnitTestCase {
   }
 
   function test_it_is_not_public() {
-    $this->assertFalse($this->postType->getOptions()['public']);
+    $options = $this->postType->getOptions();
+    $this->assertFalse($options['public']);
   }
 
   function test_it_is_not_included_in_search() {
-    $this->assertTrue($this->postType->getOptions()['exclude_from_search']);
-    $this->assertFalse($this->postType->getOptions()['publicly_queryable']);
+    $options = $this->postType->getOptions();
+    $this->assertTrue($options['exclude_from_search']);
+    $this->assertFalse($options['publicly_queryable']);
   }
 
   function test_it_does_not_have_ui() {
-    $this->assertFalse($this->postType->getOptions()['show_ui']);
+    $options = $this->postType->getOptions();
+    $this->assertFalse($options['show_ui']);
   }
 
   function test_it_is_not_hierarchical() {
-    $this->assertFalse($this->postType->getOptions()['hierarchical']);
+    $options = $this->postType->getOptions();
+    $this->assertFalse($options['hierarchical']);
   }
 
   function test_it_does_not_rewrite_urls() {
-    $this->assertFalse($this->postType->getOptions()['rewrite']);
+    $options = $this->postType->getOptions();
+    $this->assertFalse($options['rewrite']);
   }
 
   function test_it_can_be_exported() {
-    $this->assertTrue($this->postType->getOptions()['can_export']);
+    $options = $this->postType->getOptions();
+    $this->assertTrue($options['can_export']);
   }
 
   function test_it_can_be_registered() {
