@@ -93,7 +93,7 @@ class SrcReplacer {
   }
 
   function getSlugs() {
-    return array_column($this->variants, 'slug');
+    return array_unique(array_column($this->variants, 'slug'));
   }
 
   function hasSlugs() {

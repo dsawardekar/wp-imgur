@@ -51,19 +51,45 @@ class PostType {
   }
 
   function findBy($postNames, $pageNum = 1, $pageSize = 25) {
-    $slugs = array_map(
-      array($this, 'toSlug'), $postNames
-    );
+    global $wpdb;
 
-    $options = array(
-      'post_type'      => $this->getName(),
-      'names'          => $slugs,
-      'paged'          => $pageNum,
-      'posts_per_page' => $pageSize
-    );
+    $inClause = $this->inClauseFor('post_name', $postNames);
+    $sql = <<<SQL
+    SELECT post_name, post_content
+    From $wpdb->posts
+    WHERE
+      post_type = 'imgur_image'
+SQL;
 
-    $query = new \WP_Query($options);
-    return $query->get_posts();
+    if ($inClause !== '') {
+      $sql .= "AND $inClause;";
+    }
+
+    return $wpdb->get_results($sql, ARRAY_N);
+  }
+
+  function inClauseFor($column, $items) {
+    global $wpdb;
+
+    $n = count($items);
+    if ($n === 0) {
+      return '';
+    }
+
+    $sql = $column . ' IN (';
+
+    for ($i = 0; $i < $n; $i++) {
+      $item = $this->toSlug($items[$i]);
+      $sql .= $wpdb->prepare('%s', $item);
+
+      if ($i < ($n - 1)) {
+        $sql .= ',';
+      }
+    }
+
+    $sql .= ')';
+
+    return $sql;
   }
 
   function getName() {

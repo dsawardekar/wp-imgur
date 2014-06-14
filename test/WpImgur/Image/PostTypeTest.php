@@ -90,6 +90,9 @@ class PostTypeTest extends \WP_UnitTestCase {
     $this->postType->create('image 1', array('foo' => 1));
     $this->postType->create('image 2', array('foo' => 2));
     $this->postType->create('image 3', array('foo' => 3));
+    $this->postType->create('image 4', array('foo' => 1));
+    $this->postType->create('image 5', array('foo' => 2));
+    $this->postType->create('image 6', array('foo' => 3));
 
     $images = $this->postType->findBy(array('image-1', 'image-2', 'image-3'));
     $this->assertEquals(3, count($images));

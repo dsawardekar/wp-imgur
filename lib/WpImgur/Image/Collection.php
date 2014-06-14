@@ -30,7 +30,9 @@ class Collection {
     $images  = array();
 
     foreach ($results as $result) {
-      $images[$result->post_name] = json_decode($result->post_content, true);
+      $postName = $result[0];
+      $postContent = $result[1];
+      $images[$postName] = json_decode($postContent, true);
     }
 
     return $images;
