@@ -105,7 +105,7 @@ class ImageTest extends \WP_UnitTestCase {
     );
 
     $this->image->setAttributes($attr);
-    $this->assertFalse($this->image->isCustomSize());
+    $this->assertTrue($this->image->isCustomSize());
   }
 
   function test_it_knows_if_image_is_custom_size() {
@@ -115,7 +115,7 @@ class ImageTest extends \WP_UnitTestCase {
     );
 
     $this->image->setAttributes($attr);
-    $this->assertTrue($this->image->isCustomSize());
+    $this->assertFalse($this->image->isCustomSize());
   }
 
   function test_it_knows_if_image_is_original() {
