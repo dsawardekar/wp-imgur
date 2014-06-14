@@ -6,12 +6,12 @@ class SyncController extends \Arrow\Ajax\Controller {
 
   public $container;
   public $attachmentPostType;
-  public $imageUploader;
+  public $imageSynchronizer;
 
   function needs() {
     return array_merge(
       parent::needs(),
-      array('attachmentPostType', 'imageUploader', 'imageSynchronizer')
+      array('attachmentPostType', 'imageSynchronizer')
     );
   }
 
