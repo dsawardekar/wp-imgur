@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>WpImgur</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{BASE_TAG}}
+
+    <link rel="stylesheet" href="assets/vendor.css">
+    <link rel="stylesheet" href="assets/wp-imgur.css">
+  </head>
+  <body>
+    <script>
+      window.WpImgurENV = {{ENV}};
+      window.EmberENV = window.WpImgurENV.EmberENV;
+    </script>
+    <script src="assets/vendor.js"></script>
+    <script src="assets/wp-imgur.js"></script>
+    <script>
+      window.WpImgur = require('wp-imgur/app')['default'].create(WpImgurENV.APP);
+    </script>
+  </body>
+</html>
