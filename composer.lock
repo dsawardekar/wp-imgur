@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dsawardekar/arrow.git",
-                "reference": "6282a6ec946b8016efab3c6ead2528df5a7b9187"
+                "reference": "4ae8b5724b01bb86102572f448fe57b4ad744b4f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dsawardekar/arrow/zipball/6282a6ec946b8016efab3c6ead2528df5a7b9187",
-                "reference": "6282a6ec946b8016efab3c6ead2528df5a7b9187",
+                "url": "https://api.github.com/repos/dsawardekar/arrow/zipball/4ae8b5724b01bb86102572f448fe57b4ad744b4f",
+                "reference": "4ae8b5724b01bb86102572f448fe57b4ad744b4f",
                 "shasum": ""
             },
             "require": {
@@ -28,7 +28,8 @@
             },
             "require-dev": {
                 "mockery/mockery": "~0.9.0",
-                "phpunit/phpunit": "~3.7.0"
+                "phpunit/phpunit": "~3.7.0",
+                "satooshi/php-coveralls": "~0.6.0"
             },
             "type": "library",
             "autoload": {
@@ -55,7 +56,7 @@
                 "wordpress",
                 "wordpress plugins"
             ],
-            "time": "2014-06-20 10:05:24"
+            "time": "2014-06-21 07:54:14"
         },
         {
             "name": "dsawardekar/encase-php",
