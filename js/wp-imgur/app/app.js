@@ -1,13 +1,15 @@
 import Ember from 'ember';
 import Resolver from 'ember/resolver';
 import loadInitializers from 'ember/load-initializers';
-
-Ember.MODEL_FACTORY_INJECTIONS = true;
+import EasyForm from './ext/easy_form';
 
 var App = Ember.Application.extend({
-  modulePrefix: 'wp-imgur', // TODO: loaded via config
+  modulePrefix: 'wp-imgur',
   Resolver: Resolver,
-  rootElement: '#wp-imgur'
+  rootElement: '#wp-imgur',
+  includes: [
+    EasyForm,
+  ]
 });
 
 loadInitializers(App, 'wp-imgur');

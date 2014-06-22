@@ -5,7 +5,7 @@
   "require": {
     "dsawardekar/encase-php": "~0.2.0",
     "dsawardekar/arrow": "dev-develop",
-    "dsawardekar/imgur-api": "~0.3.0"
+    "dsawardekar/imgur-api": "dev-develop"
   },
   "autoload": {
     "psr-4": {

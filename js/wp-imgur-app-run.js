@@ -11,8 +11,9 @@ WpImgurENV = {
     "LOG_RESOLVER": false,
     "LOG_ACTIVE_GENERATION": false,
     "LOG_MODULE_RESOLVER": false,
-    "LOG_VIEW_LOOKUPS": false,
-    "LOG_TRANSITIONS": true
+    "LOG_VIEW_LOOKUPS": true,
+    "LOG_TRANSITIONS": true,
+    "LOG_TRANSITIONS_INTERNAL": false
   },
   "LOG_MODULE_RESOLVER": false
 };

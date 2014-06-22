@@ -1,0 +1,10 @@
+{{#form-for this}}
+  <table class="form-table">
+    <tbody>
+    {{input pin wrapper='wp-input' label="Enter Imgur PIN"}}
+    </tbody>
+  </table>
+  <p class="submit">
+    <button class="button button-primary" {{action 'verifyPin'}}>Verify PIN</button>
+  </p>
+{{/form-for}}

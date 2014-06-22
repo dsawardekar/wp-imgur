@@ -80,11 +80,14 @@ end
 namespace :ember do
   desc "Download Ember dependencies"
   task :download do
-    sh 'wget -O js/ember-easyForm.js http://builds.dockyard.com.s3.amazonaws.com/ember-easyForm/release/ember-easyForm.js'
-    sh 'wget -O js/ember-easyForm.min.js http://builds.dockyard.com.s3.amazonaws.com/ember-easyForm/release/ember-easyForm.min.js'
+    sh "mkdir -p js/#{plugin_slug}/vendor/ember-validations/dist"
+    sh "wget -O js/#{plugin_slug}/vendor/ember-validations/dist/ember-validations.js http://builds.dockyard.com.s3.amazonaws.com/ember-validations/release/ember-validations.js"
+    sh "wget -O js/#{plugin_slug}/vendor/ember-validations/dist/ember-validations.min.js http://builds.dockyard.com.s3.amazonaws.com/ember-validations/release/ember-validations.min.js"
 
-    sh 'wget -O js/ember-validations.js http://builds.dockyard.com.s3.amazonaws.com/ember-validations/release/ember-validations.js'
-    sh 'wget -O js/ember-validations.min.js http://builds.dockyard.com.s3.amazonaws.com/ember-validations/release/ember-validations.min.js'
+    sh "mkdir -p js/#{plugin_slug}/vendor/ember-easyForm/dist"
+    sh "wget -O js/#{plugin_slug}/vendor/ember-easyForm/dist/ember-easyForm.js http://builds.dockyard.com.s3.amazonaws.com/ember-easyForm/release/ember-easyForm.js"
+    sh "wget -O js/#{plugin_slug}/vendor/ember-easyForm/dist/ember-easyForm.min.js http://builds.dockyard.com.s3.amazonaws.com/ember-easyForm/release/ember-easyForm.min.js"
+
   end
 end
 

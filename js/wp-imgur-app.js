@@ -8,6 +8,7 @@ Ember.EasyForm.Error.reopen({
 });
 
 
+/* */
 WpImgurApplication = Em.Application.extend({
   config: function() {
     return window[this.get('configKey')];
@@ -101,6 +102,7 @@ WpImgur.NoticeObject = Em.Object.extend({
 });
 
 Notice = WpImgur.NoticeObject.create({});
+/* */
 
 WpImgur.AdapterObject = Em.Object.extend({
   apiEndpoint: null,

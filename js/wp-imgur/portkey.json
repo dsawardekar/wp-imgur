@@ -1,0 +1,6 @@
+{
+  "portkeys": ["ember:appkit"],
+  "app/ext/*.js": {
+    "type": "extension"
+  }
+}

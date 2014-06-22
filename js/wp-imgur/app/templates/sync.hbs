@@ -1,0 +1,13 @@
+<p class="submit">
+  {{#if isActive}}
+    <button class="button button-primary" {{action 'stopSync'}}>Stop Sync</button>
+    <strong>&nbsp;{{ percentComplete }} %</strong>
+    {{#if thumbnail}}
+    <p class="submit">
+      <img {{bind-attr src=thumbnail}} class="imgur-thumb">
+    </p>
+    {{/if}}
+  {{else}}
+    <button class="button button-primary" {{action 'startSync'}}>Start Sync</button>
+  {{/if}}
+</p>
