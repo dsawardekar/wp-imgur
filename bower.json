@@ -1,7 +1,0 @@
-{
-  "name": "wp-imgur",
-  "dependencies": {
-    "ember": "~1.5",
-    "handlebars": ">= 1.0.0 < 2.0.0"
-  }
-}

@@ -20,7 +20,6 @@ namespace :git do
 
   task :clean do
     sh 'rm -rf tmp'              if File.directory?('tmp')
-    sh 'rm -rf bower_components' if File.directory?('bower_components')
     sh 'rm wp-cli.local.yml'     if File.exists?('wp-cli.local.yml')
 
     sh 'git rm *.json'
@@ -59,21 +58,6 @@ namespace :git do
 
   task :dist_publish do
     sh "git push origin dist-#{version}"
-  end
-end
-
-namespace :bower do
-  desc "Copy Bower libraries"
-  task :copy do
-    cp 'bower_components/handlebars/handlebars.js', 'js/handlebars.js'
-    cp 'bower_components/handlebars/handlebars.min.js', 'js/handlebars.min.js'
-    cp 'bower_components/ember/ember.js', 'js/ember.js'
-    cp 'bower_components/ember/ember.min.js', 'js/ember.min.js'
-  end
-
-  desc "Update Bower libraries"
-  task :update do
-    sh 'bower update'
   end
 end
 
@@ -227,6 +211,5 @@ task :publish => [
 
 desc 'Initialize - after distribution'
 task :init => [
-  'composer:update',
-  'bower:update'
+  'composer:update'
 ]
