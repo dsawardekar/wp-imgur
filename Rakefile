@@ -71,8 +71,27 @@ namespace :ember do
     sh "mkdir -p js/#{plugin_slug}/vendor/ember-easyForm/dist"
     sh "wget -O js/#{plugin_slug}/vendor/ember-easyForm/dist/ember-easyForm.js http://builds.dockyard.com.s3.amazonaws.com/ember-easyForm/release/ember-easyForm.js"
     sh "wget -O js/#{plugin_slug}/vendor/ember-easyForm/dist/ember-easyForm.min.js http://builds.dockyard.com.s3.amazonaws.com/ember-easyForm/release/ember-easyForm.min.js"
-
   end
+
+  desc "Compiles Ember CLI App and copies into dist locations"
+  task :dist do
+    base = Dir.pwd
+    Dir.chdir("js/#{plugin_slug}") do
+      system({'WRAP_IN_EVAL' => '0'}, 'ember build --env development')
+
+      cp "dist/assets/vendor.css"         ,  "#{base}/css/#{plugin_slug}-vendor.css"
+      cp "dist/assets/#{plugin_slug}.css" ,  "#{base}/css/#{plugin_slug}-app.css"
+      cp "dist/assets/vendor.js"          ,  "#{base}/js/#{plugin_slug}-vendor.js"
+      cp "dist/assets/#{plugin_slug}.js"  ,  "#{base}/js/#{plugin_slug}-app.js"
+
+      sh "ember build --env production"
+      cp "dist/assets/vendor.css"         ,  "#{base}/css/#{plugin_slug}-vendor.min.css"
+      cp "dist/assets/#{plugin_slug}.css" ,  "#{base}/css/#{plugin_slug}-app.min.css"
+      cp "dist/assets/vendor.js"          ,  "#{base}/js/#{plugin_slug}-vendor.min.js"
+      cp "dist/assets/#{plugin_slug}.js"  ,  "#{base}/js/#{plugin_slug}-app.min.js"
+    end
+  end
+
 end
 
 namespace :composer do

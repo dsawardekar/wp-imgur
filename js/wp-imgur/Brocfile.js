@@ -1,11 +1,15 @@
-/* global require, module */
+/* global require, module, process */
 
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 var config = {
   fingerprint: {
     enabled: false
-  }
+  },
 };
+
+if (process.env.WRAP_IN_EVAL) {
+  config.wrapInEval = process.env.WRAP_IN_EVAL === '1';
+}
 
 var app = new EmberApp(config);
 
