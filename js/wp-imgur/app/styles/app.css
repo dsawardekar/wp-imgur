@@ -122,10 +122,11 @@ fieldset legend {
 }
 
 .wrap-extra-settings {
-  opacity: 0;
+  display: none;
 }
 
 .extra-settings-active {
+  display: block;
   opacity: 1;
   transition: opacity 300ms;
 }

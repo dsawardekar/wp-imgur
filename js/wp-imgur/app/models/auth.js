@@ -29,22 +29,11 @@ var AuthModel = Ember.Object.extend({
       type: 'POST',
       data: JSON.stringify(data)
     };
-
-    /*
     var self = this;
-    var defer = new Ember.RSVP.Promise(function(resolve, reject) {
-      setTimeout(function() {
-        self.set('authorized', true);
-        console.log('changed authorized to', self.get('authorized'));
-        resolve(true);
-      }, 1000);
-    });
-
-    return defer;
-    */
 
     return api.request('auth', 'verifyPin', params)
     .then(function(json) {
+      self.set('authorized', true);
       return true;
     });
   }

@@ -21,22 +21,6 @@ var ApplicationRoute = Ember.Route.extend({
   },
 
   actions: {
-    verifyPin: function() {
-      Notice.show('progress', 'Verifying PIN ...');
-      var self = this;
-
-      auth.verifyPin()
-      .then(function() {
-        Notice.show('updated', 'PIN Verified successfully.');
-
-        var controller = self.get('controller');
-        controller.transitionToRoute('sync');
-      })
-      .catch(function(error) {
-        Notice.show('error', error);
-      });
-    },
-
     error: function(reason) {
       WpNotice.show('error', 'Error: ' + reason);
     }

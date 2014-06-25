@@ -9,17 +9,6 @@ var Notice = Ember.Object.extend({
   show: function(type, value) {
     this.set('type', type);
     this.set('messages', this.toMessages(value));
-
-    /*
-    var self = this;
-    clearInterval(this.get('intervalId'));
-
-    var intervalId = setInterval(function() {
-      self.hide();
-    }, this.get('autoHideIn'));
-
-    this.set('intervalId', intervalId);
-    */
   },
 
   hide: function() {

@@ -2,7 +2,7 @@
 {{outlet}}
 </div>
 
-<div {{bind-attr class="authorized:extra-settings-active:extra-settings-inactive"}}>
+<div {{bind-attr class="auth.authorized:extra-settings-active:extra-settings-inactive"}}>
 <fieldset>
 	<legend>
     <span>Media Uploader Integration</span>
@@ -10,7 +10,6 @@
   <p>If you wish to uninstall the plugin you can optionally empty the
   Imgur Album {{site}} containing your synced images.</p>
   <p>
-  {{log config}}
 	<label>
     {{input type="checkbox" name="syncOnMediaUpload"
     checked=config.syncOnMediaUpload}}Auto Sync on Media Upload
