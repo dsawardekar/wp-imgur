@@ -5,8 +5,14 @@ var Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-  this.route('authorize');
-  this.route('verifypin');
+  this.resource('settings', function() {
+    this.resource('auth', function() {
+      this.route('unauthorized');
+      this.route('verifypin');
+      this.route('authorized');
+    });
+  });
+
   this.route('sync');
 });
 

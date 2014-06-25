@@ -1,13 +1,24 @@
-<p class="submit">
-  {{#if isActive}}
-    <button class="button button-primary" {{action 'stopSync'}}>Stop Sync</button>
-    <strong>&nbsp;{{ percentComplete }} %</strong>
-    {{#if thumbnail}}
-    <p class="submit">
-      <img {{bind-attr src=thumbnail}} class="imgur-thumb">
+<div class="sync">
+  {{#if active}}
+    <p>
+    Please wait while your Media is Synched to Imgur.com servers. This
+    may take a few minutes depending on the size of your Media Library ...
     </p>
-    {{/if}}
   {{else}}
-    <button class="button button-primary" {{action 'startSync'}}>Start Sync</button>
+    <p>
+    Uploads your Media Library to Imgur.com. You only need to do this
+    the first time that you install WP-Imgur. All subsequent media uploads
+    are sent to the Imgur.com servers when you upload images via the Media
+    Uploader.
+    </p>
   {{/if}}
-</p>
+  {{wp-progress-button
+    startAction='startSync'
+    stopAction='stopSync'
+    startLabel='Start Sync'
+    stopLabel='Stop Sync'
+    progress=percentComplete
+   }}
+   <img {{ bind-attr src=thumbnail }} {{ bind-attr class='active:sync-thumb:hide' }}/>
+</div>
+

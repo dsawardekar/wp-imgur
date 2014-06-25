@@ -9,9 +9,6 @@ var SyncController = Ember.ObjectController.extend({
   onSyncProgress: function() {
     var model = this.get('content');
     Notice.show('progress', 'Synchronizing ' + model.get('name') + ' ...');
-
-    var thumb = Ember.$('.imgur-thumb');
-    thumb.css('background-image', "url(" + model.get('thumbnail') + ")");
   },
 
   onSyncStop: function() {
@@ -39,7 +36,7 @@ var SyncController = Ember.ObjectController.extend({
         model.on(eventName, self, callback);
       });
 
-      model.startSync();
+      var promise = model.startSync();
     },
 
     stopSync: function() {

@@ -11,6 +11,7 @@ var WpNotice = Ember.Object.extend({
 
   hide: function() {
     Ember.$('.static-notice').remove();
+    Ember.$('#static-header').remove();
   }
 });
 

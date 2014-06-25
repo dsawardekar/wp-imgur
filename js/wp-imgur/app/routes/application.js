@@ -2,6 +2,7 @@ import Ember    from 'ember';
 import WpNotice from 'wp-imgur/ext/wp_notice';
 import Notice   from 'wp-imgur/models/notice';
 import auth     from 'wp-imgur/models/auth';
+import pages from 'wp-imgur/models/pages';
 
 var ApplicationRoute = Ember.Route.extend({
   model: function() {
@@ -14,16 +15,12 @@ var ApplicationRoute = Ember.Route.extend({
     if (model.get('authorized')) {
       this.transitionTo('sync');
     } else {
-      this.transitionTo('authorize');
+      pages.set('lockEnabled', true);
+      this.transitionTo('auth.unauthorized');
     }
   },
 
   actions: {
-    authorizeStart: function() {
-      window.open(auth.get('authorizeUrl'), '_blank');
-      this.get('controller').transitionToRoute('verifypin');
-    },
-
     verifyPin: function() {
       Notice.show('progress', 'Verifying PIN ...');
       var self = this;

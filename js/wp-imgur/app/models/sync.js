@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import api from 'wp-imgur/ext/arrow_api';
+import pages from 'wp-imgur/models/pages';
 
 var SyncModel = Ember.Object.extend(Ember.Evented, {
   items: Ember.A(),
@@ -8,6 +9,8 @@ var SyncModel = Ember.Object.extend(Ember.Evented, {
   currentItem: null,
 
   startSync: function() {
+    pages.set('lockEnabled', true);
+
     var self    = this;
     var current = this.get('current');
 
@@ -57,6 +60,7 @@ var SyncModel = Ember.Object.extend(Ember.Evented, {
       this.set('active', false);
       this.set('current', -1);
       this.trigger('syncComplete');
+      pages.set('lockEnabled', false);
     }
   },
 
@@ -80,11 +84,8 @@ var SyncModel = Ember.Object.extend(Ember.Evented, {
   stopSync: function() {
     this.set('active', false);
     this.trigger('syncStop');
+    pages.set('lockEnabled', false);
   },
-
-  isActive: function() {
-    return this.get('active');
-  }.property('active'),
 
   thumbnail: function() {
     var currentItem = this.get('currentItem');

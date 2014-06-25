@@ -11,7 +11,7 @@ class Synchronizer {
   public $hookMode = false;
 
   function needs() {
-    return array('attachmentPostType', 'imageUploader', 'ajaxJsonPrinter');
+    return array('attachmentPostType', 'imageUploader', 'ajaxJsonPrinter', 'optionsStore');
   }
 
   function enable() {
@@ -21,7 +21,9 @@ class Synchronizer {
   function onAttachmentMetaChange($metaId, $postId, $metaKey, $metaValue) {
     if ($metaKey === '_wp_attachment_metadata') {
       $this->hookMode = true;
-      $this->sync($postId);
+      if ($this->optionsStore->getOption('syncOnMediaUpload')) {
+        $this->sync($postId);
+      }
     }
   }
 

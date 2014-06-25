@@ -16,7 +16,21 @@ class PluginMeta extends \Arrow\PluginMeta {
       'refreshToken'      => '',
       'accessTokenExpiry' => strtotime('-1 hour'),
       'album'             => '',
-      'uploadMode'        => 'push'
+      'uploadMode'        => 'push',
+      'syncOnMediaUpload' => true,
+      'syncOnMediaEdit'   => true
+    );
+  }
+
+  function getOptionsContext() {
+    $imgurAdapter = $this->container->lookup('imgurAdapter');
+    $optionsStore = $this->container->lookup('optionsStore');
+
+    return array(
+      'authorized'        => $imgurAdapter->isAuthorized(),
+      'authorizeUrl'      => $imgurAdapter->authorizeUrl(),
+      'syncOnMediaUpload' => $optionsStore->getOption('syncOnMediaUpload'),
+      'syncOnMediaEdit'   => $optionsStore->getOption('syncOnMediaEdit')
     );
   }
 

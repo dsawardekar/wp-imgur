@@ -23,7 +23,7 @@ var removeLibrary = function(name) {
   app.legacyFilesToAppend = filtered;
 };
 
-removeLibrary('jquery');
+//removeLibrary('jquery');
 
 app.import('vendor/ember-validations/dist/ember-validations.js');
 app.import('vendor/ember-easyForm/dist/ember-easyForm.js');

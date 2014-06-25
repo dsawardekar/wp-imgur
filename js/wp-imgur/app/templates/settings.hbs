@@ -1,0 +1,35 @@
+<div class="wrap-settings">
+{{outlet}}
+</div>
+
+<div {{bind-attr class="authorized:extra-settings-active:extra-settings-inactive"}}>
+<fieldset>
+	<legend>
+    <span>Media Uploader Integration</span>
+  </legend>
+  <p>If you wish to uninstall the plugin you can optionally empty the
+  Imgur Album {{site}} containing your synced images.</p>
+  <p>
+  {{log config}}
+	<label>
+    {{input type="checkbox" name="syncOnMediaUpload"
+    checked=config.syncOnMediaUpload}}Auto Sync on Media Upload
+	</label>
+  </p>
+  <p>
+	<label>
+    {{input type="checkbox" name="syncOnMediaEdit"
+    checked=config.syncOnMediaEdit}}Auto Sync on Media Edit
+	</label>
+  </p>
+  {{wp-button action='updateMediaOptions' label='Save Changes'}}
+</fieldset>
+
+<fieldset>
+	<legend><span>Cleanup</span></legend>
+  <p>If you wish to uninstall the plugin you can optionally empty the
+  Album on Imgur.com {{site}} containing your synced images.</p>
+    <button class="button button-primary" {{action 'verifyPin'}}>Empty
+    Album</button>
+</fieldset>
+</div>
