@@ -65,16 +65,12 @@ var SyncModel = Ember.Object.extend(Ember.Evented, {
   },
 
   next: function() {
-    var data = {
-      id: this.items[this.current]
-    };
     var self = this;
     var params = {
-      type: 'POST',
-      data: JSON.stringify(data)
+      id: this.items[this.current]
     };
 
-    return api.request('sync', 'update', params)
+    return api.post('sync', params)
     .then(function(item) {
       self.set('currentItem', item);
       self.queueNext();
@@ -111,11 +107,8 @@ var SyncModel = Ember.Object.extend(Ember.Evented, {
 
   load: function() {
     var self = this;
-    var params = {
-      type: 'GET'
-    };
 
-    return api.request('sync', 'index', params)
+    return api.all('sync')
     .then(function(items) {
       self.set('items', Ember.A(items));
     });

@@ -24,12 +24,13 @@ var AuthModel = Ember.Object.extend({
   },
 
   verifyPin: function() {
-    var data   = { 'pin': this.get('pin') };
+    var self   = this;
     var params = {
       type: 'POST',
-      data: JSON.stringify(data)
+      data: {
+        'pin': this.get('pin')
+      }
     };
-    var self = this;
 
     return api.request('auth', 'verifyPin', params)
     .then(function(json) {
@@ -39,6 +40,4 @@ var AuthModel = Ember.Object.extend({
   }
 });
 
-var instance = AuthModel.create();
-
-export default instance;
+export default AuthModel.create();

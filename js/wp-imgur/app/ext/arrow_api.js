@@ -14,11 +14,15 @@ var ArrowApi = Ember.Object.extend({
     return this.get('apiEndpoint') + '&' + Ember.$.param(params);
   },
 
-  request: function(controller, operation, params) {
-    params.url = this.urlFor(controller, operation);
+  request: function(controller, operation, queryParams) {
+    queryParams.url = this.urlFor(controller, operation);
+
+    if (queryParams.type === 'POST' && queryParams.hasOwnProperty('data')) {
+      queryParams.data = JSON.stringify(queryParams.data);
+    }
 
     return new Ember.RSVP.Promise(function(resolve, reject) {
-      return Ember.$.ajax(params)
+      return Ember.$.ajax(queryParams)
       .then(function(response) {
         if (response === '0') {
           reject('Not Logged In');
@@ -41,7 +45,38 @@ var ArrowApi = Ember.Object.extend({
         reject(error);
       });
     });
+  },
+
+  all: function(resource) {
+    var queryParams = { type: 'GET' };
+    return this.request(resource, 'all', queryParams);
+  },
+
+  fetch: function(resource, params) {
+    var queryParams = { type: 'GET', data: params };
+    return this.request(resource, 'get', queryParams);
+  },
+
+  post: function(resource, params) {
+    var queryParams = { type: 'POST', data: params };
+    return this.request(resource, 'post', queryParams);
+  },
+
+  put: function(resource, params) {
+    var queryParams = { type: 'POST', data: params };
+    return this.request(resource, 'put', queryParams);
+  },
+
+  patch: function(resource, params) {
+    var queryParams = { type: 'POST', data: params };
+    return this.request(resource, 'patch', queryParams);
+  },
+
+  delete: function(resource, params) {
+    var queryParams = { type: 'POST', data: params };
+    return this.request(resource, 'delete', queryParams);
   }
+
 });
 
 export default ArrowApi.create();
