@@ -33,9 +33,10 @@ var AuthModel = Ember.Object.extend({
     };
 
     return api.request('auth', 'verifyPin', params)
-    .then(function(json) {
-      self.set('authorized', true);
-      return true;
+    .then(function(success) {
+      self.set('authorized', success);
+      self.set('pin', '');
+      return success;
     });
   }
 });
