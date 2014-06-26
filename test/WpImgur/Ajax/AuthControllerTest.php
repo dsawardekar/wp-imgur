@@ -33,10 +33,6 @@ class AuthControllerTest extends \WP_UnitTestCase {
     return $this->container->lookup($key);
   }
 
-  function test_it_has_an_options_store() {
-    $this->assertSame($this->store, $this->controller->optionsStore);
-  }
-
   function test_it_has_an_imgur_adapter() {
     $this->assertSame($this->adapter, $this->controller->imgurAdapter);
   }
@@ -52,17 +48,6 @@ class AuthControllerTest extends \WP_UnitTestCase {
   function test_it_only_allows_verify_pin_over_post() {
     $methods = $this->controller->actionMethods();
     $this->assertEquals(array('POST'), $methods['verifyPin']);
-  }
-
-  function test_it_knows_if_plugin_is_not_authorized() {
-    $actual = $this->controller->index();
-    $this->assertFalse($actual['authorized']);
-  }
-
-  function test_it_knows_if_plugin_is_authorized() {
-    $this->store->setOption('accessToken', 'foo');
-    $actual = $this->controller->index();
-    $this->assertTrue($actual['authorized']);
   }
 
   function test_it_will_send_error_if_input_without_pin() {

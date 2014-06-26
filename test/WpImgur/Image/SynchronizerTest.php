@@ -16,6 +16,8 @@ class SynchronizerTest extends \WP_UnitTestCase {
 
     $this->container = new Container();
     $this->container
+      ->object('pluginMeta', new \WpImgur\PluginMeta('my-plugin.php'))
+      ->packager('optionsPackager', 'Arrow\Options\Packager')
       ->factory('image', 'WpImgur\Image\Image')
       ->factory('syncImage', 'WpImgur\Image\SyncImage')
       ->factory('imageStore', 'WpImgur\Image\Store')
@@ -332,6 +334,24 @@ class SynchronizerTest extends \WP_UnitTestCase {
     $this->assertTrue($store->hasImage('300x194'));
     $this->assertTrue($store->hasImage('1024x665'));
     $this->assertTrue($store->hasImage('624x405'));
+  }
+
+  function test_it_will_not_sync_image_after_upload_if_disabled() {
+    $optionsStore = $this->container->lookup('optionsStore');
+    $optionsStore->setOption('syncOnMediaUpload', false);
+
+    $this->container->factory('image', 'WpImgur\Image\SyncImage');
+    $id = $this->setUpAttachment();
+    $this->uploader->result = 'mirror';
+
+    $this->syncer->enable();
+    do_action('added_post_meta', 100, $id, '_wp_attachment_metadata', 'foo');
+
+    $store = $this->lookup('imageStore');
+    $store->setSlug('foo-jpg');
+    $store->load();
+
+    $this->assertFalse($store->hasImage('original'));
   }
 
 }

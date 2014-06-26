@@ -4,7 +4,6 @@ namespace WpImgur\Ajax;
 
 class SyncController extends \Arrow\Ajax\Controller {
 
-  public $container;
   public $attachmentPostType;
   public $imageSynchronizer;
 
@@ -15,14 +14,14 @@ class SyncController extends \Arrow\Ajax\Controller {
     );
   }
 
-  function index() {
+  function all() {
     $items = $this->attachmentPostType->findAll();
     //return array_slice($items, 0, 1);
     //return array_slice($items, 0, 5);
     return $items;
   }
 
-  function update() {
+  function post() {
     $validator = $this->getValidator();
     $validator->rule('required', 'id');
     $validator->rule('integer', 'id');

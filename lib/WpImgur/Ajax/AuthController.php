@@ -4,37 +4,23 @@ namespace WpImgur\Ajax;
 
 class AuthController extends \Arrow\Ajax\Controller {
 
-  public $optionsStore;
   public $imgurAdapter;
   public $syncPreparer;
 
   function needs() {
     return array_merge(
       parent::needs(),
-      array('optionsStore', 'imgurAdapter', 'syncPreparer')
+      array('imgurAdapter', 'syncPreparer')
     );
   }
 
   function adminActions() {
-    return array_merge(
-      parent::adminActions(),
-      array('verifyPin')
-    );
+    return array('verifyPin');
   }
 
   function actionMethods() {
-    return array_merge(
-      parent::actionMethods(),
-      array(
-        'verifyPin' => array('POST')
-      )
-    );
-  }
-
-  function index() {
     return array(
-      'authorized' => $this->imgurAdapter->isAuthorized(),
-      'authorizeUrl' => $this->imgurAdapter->authorizeUrl()
+      'verifyPin' => array('POST')
     );
   }
 

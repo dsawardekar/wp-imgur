@@ -46,7 +46,7 @@ class SyncControllerTest extends \WP_UnitTestCase {
     array_push($ids, $this->factory->attachment->create_object('image-2', 2, $meta));
     array_push($ids, $this->factory->attachment->create_object('image-3', 3, $meta));
 
-    $actual = $this->controller->index();
+    $actual = $this->controller->all();
 
     $this->assertSame(
       array_diff($ids, $actual), array_diff($actual, $ids)
@@ -54,25 +54,25 @@ class SyncControllerTest extends \WP_UnitTestCase {
   }
 
   function test_it_will_return_empty_list_if_no_attachments_found() {
-    $actual = $this->controller->index();
+    $actual = $this->controller->all();
     $this->assertEmpty($actual);
   }
 
   function test_it_will_not_sync_without_id() {
     $this->controller->params = array();
-    $actual = $this->controller->update();
+    $actual = $this->controller->post();
     $this->assertInstanceOf('Arrow\Ajax\ControllerError', $actual);
   }
 
   function test_it_will_not_sync_with_invalid_id() {
     $this->controller->params = array('id' => 'foo');
-    $actual = $this->controller->update();
+    $actual = $this->controller->post();
     $this->assertInstanceOf('Arrow\Ajax\ControllerError', $actual);
   }
 
   function test_it_will_skip_synching_unknown_attachment_id() {
     $this->controller->params = array('id' => 1000);
-    $actual = $this->controller->update();
+    $actual = $this->controller->post();
     $this->assertContains('Skipped', $actual['name']);
   }
 
@@ -92,7 +92,7 @@ class SyncControllerTest extends \WP_UnitTestCase {
     $this->controller->imageSynchronizer = $mock;
 
     $this->controller->params = array('id' => 10);
-    $actual = $this->controller->update();
+    $actual = $this->controller->post();
     $this->assertEquals($result, $actual);
   }
 

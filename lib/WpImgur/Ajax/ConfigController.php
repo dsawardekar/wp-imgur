@@ -4,6 +4,8 @@ namespace WpImgur\Ajax;
 
 class ConfigController extends \Arrow\Ajax\Controller {
 
+  public $optionsStore;
+
   function needs() {
     return array_merge(
       parent::needs(),
@@ -11,7 +13,7 @@ class ConfigController extends \Arrow\Ajax\Controller {
     );
   }
 
-  function update() {
+  function patch() {
     $validator = $this->getValidator();
     $validator->rule('required', 'syncOnMediaUpload');
     $validator->rule('integer', 'syncOnMediaUpload');
@@ -25,9 +27,8 @@ class ConfigController extends \Arrow\Ajax\Controller {
 
       $this->optionsStore->setOption('syncOnMediaUpload', $syncOnMediaUpload);
       $this->optionsStore->setOption('syncOnMediaEdit', $syncOnMediaEdit);
-      $this->optionsStore->save();
 
-      return true;
+      return $this->optionsStore->save();
     } else {
       return $this->error($validator->errors());
     }
