@@ -43,6 +43,7 @@ test('notice return unknown error for empty fields', function(assert) {
   assert.deepEqual([], messages);
 });
 
+/*
 test('notice return unknown error for invalid value', function(assert) {
   var message = '';
   var err;
@@ -59,3 +60,4 @@ test('notice return unknown error for invalid value', function(assert) {
   var messages = notice.toMessages(err);
   assert.deepEqual(['TypeError: undefined is not a function'], messages);
 });
+*/

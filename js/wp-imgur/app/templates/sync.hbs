@@ -17,8 +17,9 @@
     stopAction='stopSync'
     startLabel='Start Sync'
     stopLabel='Stop Sync'
-    progress=percentComplete
+    progress=progress
+    started=active
    }}
-   <img {{ bind-attr src=thumbnail }} {{ bind-attr class='active:sync-thumb:hide' }}/>
+   <img {{ bind-attr src=current.thumbnail }} {{ bind-attr class='active:sync-thumb:hide' }}/>
 </div>
 

@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { TaskQueue, Task } from 'wp-imgur/ext/task';
+import TaskQueue from 'wp-imgur/ext/task';
 
 var stub = function() {};
 var stubError = function() { throw 'foo-error'; };
@@ -64,21 +64,22 @@ test("it can store multiple task objects", function(assert) {
   assert.equal(taskQueue.taskAt(2).get('id'), 3);
 });
 
-test('it knows if taskQueue is inactive', function(assert) {
+test('it knows if taskQueue is not active initially', function(assert) {
   assert.equal(taskQueue.get('active'), false);
 });
 
-test('it knows if taskQueue is active', function(assert) {
-  taskQueue.pending.push('foo');
-  assert.equal(taskQueue.get('active'), true);
+test('it knows taskQueue is not active after adding tasks', function(assert) {
+  taskQueue.add(MockTask.create({id: 1}));
+  assert.equal(taskQueue.get('active'), false);
 });
 
-test('it knows when active taskQueue becomes inactive', function(assert) {
-  taskQueue.pending.push('foo');
-  assert.equal(taskQueue.get('active'), true);
-  taskQueue.reset();
-
-  assert.equal(taskQueue.get('active'), false);
+asyncTest('it knows when active taskQueue becomes inactive', function(assert) {
+  taskQueue.add(DelayTask.create({id: 1}));
+  taskQueue.start();
+  taskQueue.on('taskQueueComplete', function() {
+    assert.equal(taskQueue.get('active'), false);
+    QUnit.start();
+  });
 });
 
 test('it copies tasks to pending on start', function(assert) {

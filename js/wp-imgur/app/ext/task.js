@@ -1,10 +1,13 @@
 import Ember from 'ember';
 
 var TaskQueue = Ember.Object.extend(Ember.Evented, {
-  tasks: null,
-  pending: null,
-  batchSize: 1,
-  didFirst: false,
+  tasks     : null,
+  pending   : null,
+  completed : null,
+  failures  : null,
+  batchSize : 1,
+  didFirst  : false,
+  active    : false,
 
   init: function() {
     this.reset();
@@ -12,10 +15,6 @@ var TaskQueue = Ember.Object.extend(Ember.Evented, {
 
   add: function(task) {
     this.tasks.push(task);
-  },
-
-  taskAt: function(index) {
-    return this.tasks[index];
   },
 
   reset: function() {
@@ -26,14 +25,11 @@ var TaskQueue = Ember.Object.extend(Ember.Evented, {
     this.set('didFirst', false);
   },
 
-  active: function() {
-    return this.pending.length > 0;
-  }.property('pending.[]'),
-
   start: function() {
     if (this.get('active')) {
       this.resume();
     } else {
+      this.set('active', true);
       this.set('pending', this.tasks.slice());
       this.set('completed', Ember.A());
       this.set('failures', Ember.A());
@@ -58,6 +54,24 @@ var TaskQueue = Ember.Object.extend(Ember.Evented, {
     }
   },
 
+  hasTasks: function() {
+    var completed  = this.get('completed').length;
+    var failures   = this.get('failures').length;
+    var totalTasks = this.get('tasks').length;
+    var totalDone  = completed + failures;
+
+    return totalDone < totalTasks;
+  },
+
+  progress: function() {
+    var completed = this.get('completed').length;
+    var failures  = this.get('failures').length;
+    var total     = this.get('tasks').length;
+
+    return (completed + failures) / total * 100;
+  }.property('completed.[]', 'failures.[]'),
+
+  /* helpers */
   next: function() {
     var batchSize = this.get('batchSize');
     var task;
@@ -74,7 +88,6 @@ var TaskQueue = Ember.Object.extend(Ember.Evented, {
     }
   },
 
-  /* helpers */
   nextTask: function() {
     if (this.pending.length > 0) {
       return this.pending.shift();
@@ -152,23 +165,20 @@ var TaskQueue = Ember.Object.extend(Ember.Evented, {
   peek: function(task) {
     this.trigger('taskQueueProgress', task);
 
-    if (this.hasMoreTasks()) {
+    if (this.hasTasks()) {
       this.next();
     } else {
       this.didTaskQueueComplete();
     }
   },
 
-  hasMoreTasks: function() {
-    var completed = this.get('completed').length;
-    var failures  = this.get('failures').length;
-    var total     = this.get('tasks').length;
-
-    return (completed + failures) < total;
+  didTaskQueueComplete: function() {
+    this.set('active', false);
+    this.trigger('taskQueueComplete');
   },
 
-  didTaskQueueComplete: function() {
-    this.trigger('taskQueueComplete');
+  taskAt: function(index) {
+    return this.tasks[index];
   },
 
   runningAt: function(task) {
@@ -181,29 +191,8 @@ var TaskQueue = Ember.Object.extend(Ember.Evented, {
 
   failureAt: function(task) {
     return this.failures.indexOf(task);
-  },
-
-  progress: function() {
-    var completed = this.get('completed').length;
-    var failures  = this.get('failures').length;
-    var total     = this.get('tasks').length;
-
-    return (completed + failures) / total * 100;
-  }.property('completed.[]', 'failures.[]')
-
-});
-
-var Task = Ember.Object.extend({
-  run: function() {
-    var self = this;
-    var promise = new Ember.RSVP.Promise(function(resolve, reject) {
-      setTimeout(function() {
-        resolve(self.id);
-      }, 1000);
-    });
-
-    return promise;
   }
+
 });
 
-export { TaskQueue, Task };
+export default TaskQueue;

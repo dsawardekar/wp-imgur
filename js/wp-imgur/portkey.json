@@ -1,6 +1,11 @@
 {
   "portkeys": ["ember:appkit"],
   "app/ext/*.js": {
-    "type": "extension"
+    "type": "extension",
+    "test": "tests/ext/%s-test.js"
+  },
+  "tests/ext/*-test.js": {
+    "type": "test",
+    "alternate": "app/ext/%s.js"
   }
 }

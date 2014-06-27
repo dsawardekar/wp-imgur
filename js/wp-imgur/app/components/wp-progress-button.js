@@ -24,8 +24,6 @@ var WpProgressButtonComponent = Ember.Component.extend({
     var progress = this.get('progress');
     if (isNaN(progress)) {
       progress = 0;
-    } else if (progress === -1) {
-      this.set('started', false);
     }
 
     return progress;
@@ -53,7 +51,6 @@ var WpProgressButtonComponent = Ember.Component.extend({
   actions: {
     buttonClick: function(view) {
       var started = this.get('started');
-      this.set('started', !started);
 
       if (!started) {
         this.sendAction('startAction', this, this.get('data'));

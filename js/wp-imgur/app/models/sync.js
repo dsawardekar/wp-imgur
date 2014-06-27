@@ -1,118 +1,100 @@
 import Ember from 'ember';
 import api from 'wp-imgur/ext/arrow_api';
 import pages from 'wp-imgur/models/pages';
+import TaskQueue from 'wp-imgur/ext/task';
+
+var SyncImageTask = Ember.Object.extend({
+  id: null,
+
+  run: function() {
+    var params = { id: this.get('id') };
+    return api.post('sync', params);
+  }
+});
 
 var SyncModel = Ember.Object.extend(Ember.Evented, {
-  items: Ember.A(),
-  active: false,
-  current: -1,
-  currentItem: null,
+  taskQueue: null,
+  running: false,
+  batchSize: 4,
+  didLoad: false,
+
+  init: function() {
+    var taskQueue = TaskQueue.create({ batchSize: this.get('batchSize') });
+    taskQueue.on('taskQueueProgress' , this, this.didTaskQueueProgress);
+    taskQueue.on('taskQueueComplete' , this, this.didTaskQueueComplete);
+    taskQueue.on('taskQueueError'    , this, this.didTaskQueueError);
+
+    this.set('taskQueue', taskQueue);
+  },
+
+  load: function() {
+    return api.all('sync');
+  },
 
   startSync: function() {
-    pages.set('lockEnabled', true);
-
-    var self    = this;
-    var current = this.get('current');
-
-    this.set('active', true);
     this.trigger('syncStart');
+    this.set('running', true);
 
-    if (current === -1) {
-      this.set('current', 0);
-      this.load().then(function() {
-        self.resumeSync();
-      })
-      .catch(function(error) {
-        self.trigger('syncError', error);
-      });
+    if (this.get('didLoad')) {
+      this.taskQueue.start();
     } else {
-      this.resumeSync();
-    }
-  },
-
-  resumeSync: function() {
-    if (this.get('current') === -1) {
-      this.set('current', 0);
-    }
-
-    this.set('total', this.get('items').length);
-    this.next();
-  },
-
-  queueNext: function() {
-    if (!this.get('active')) {
-      return;
-    }
-
-    var current = this.get('current') + 1;
-    var total = this.get('total');
-
-    this.set('current', current);
-
-    if (current < total) {
-      this.trigger('syncProgress');
       var self = this;
-
-      Ember.run(function() {
-        self.next();
+      this.load().then(function(ids) {
+        self.set('didLoad', true);
+        self.syncImages(ids);
       });
-    } else {
-      this.set('active', false);
-      this.set('current', -1);
-      this.trigger('syncComplete');
-      pages.set('lockEnabled', false);
     }
-  },
-
-  next: function() {
-    var self = this;
-    var params = {
-      id: this.items[this.current]
-    };
-
-    return api.post('sync', params)
-    .then(function(item) {
-      self.set('currentItem', item);
-      self.queueNext();
-    });
   },
 
   stopSync: function() {
-    this.set('active', false);
+    this.set('running', false);
+    this.taskQueue.stop();
     this.trigger('syncStop');
-    pages.set('lockEnabled', false);
   },
 
-  thumbnail: function() {
-    var currentItem = this.get('currentItem');
-    if (currentItem) {
-      return currentItem.thumbnail;
-    } else {
-      return false;
+  syncImages: function(ids) {
+    var i = 0;
+    var id;
+    var n = ids.length;
+    var task;
+
+    this.taskQueue.reset();
+
+    for (i = 0; i < n; i++) {
+      id   = ids[i];
+      task = SyncImageTask.create({ id: id });
+
+      this.taskQueue.add(task);
     }
-  }.property('currentItem'),
 
-  name: function() {
-    var currentItem = this.get('currentItem');
-    if (currentItem) {
-      return currentItem.name;
-    } else {
-      return false;
-    }
-  }.property('currentItem'),
+    this.taskQueue.start();
+  },
 
-  percentComplete: function() {
-    return Math.round(this.get('current') / this.get('total') * 100);
-  }.property('current', 'total'),
+  didTaskQueueProgress: function(task) {
+    this.set('current', task.get('output'));
+    this.trigger('syncProgress');
+  },
 
-  load: function() {
-    var self = this;
+  didTaskQueueComplete: function() {
+    this.set('running', false);
+    this.set('didLoad', false);
+    this.trigger('syncComplete');
+  },
 
-    return api.all('sync')
-    .then(function(items) {
-      self.set('items', Ember.A(items));
-    });
-  }
+  didTaskQueueError: function(error) {
+    this.set('running', false);
+    this.trigger('syncError', error);
+    this.taskQueue.stop();
+  },
+
+  progress: function() {
+    return Math.round(this.taskQueue.get('progress'));
+  }.property('taskQueue.progress'),
+
+  active: function() {
+    return this.get('running');
+  }.property('running')
+
 });
 
 export default SyncModel.create();

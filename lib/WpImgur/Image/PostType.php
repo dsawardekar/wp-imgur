@@ -69,6 +69,28 @@ SQL;
     return $wpdb->get_results($sql, ARRAY_N);
   }
 
+  function findAll() {
+    global $wpdb;
+
+    $postType = $this->getName();
+    $sql = <<<SQL
+    SELECT id from $wpdb->posts
+    WHERE post_type = '$postType';
+SQL;
+
+    $imgurImages = $wpdb->get_results($sql, ARRAY_N);
+    $ids         = array();
+
+    foreach ($imgurImages as $image) {
+      array_push($ids, $image[0]);
+    }
+
+    return $ids;
+  }
+
+  function findOne($id) {
+  }
+
   function getName() {
     return 'imgur_image';
   }

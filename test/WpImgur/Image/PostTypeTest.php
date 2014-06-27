@@ -111,4 +111,19 @@ class PostTypeTest extends \WP_UnitTestCase {
     $this->assertEquals(3, count($images));
   }
 
+  function test_it_can_find_list_of_stored_image_ids() {
+    $this->postType->register();
+
+    $expected = array();
+    array_push($expected, $this->postType->create('image 1', array('foo' => 1)));
+    array_push($expected, $this->postType->create('image 2', array('foo' => 1)));
+    array_push($expected, $this->postType->create('image 3', array('foo' => 1)));
+    array_push($expected, $this->postType->create('image 4', array('foo' => 1)));
+    array_push($expected, $this->postType->create('image 5', array('foo' => 1)));
+
+    $images = $this->postType->findAll();
+    $this->assertEquals(5, count($images));
+    $this->assertEquals($expected, $images);
+  }
+
 }
