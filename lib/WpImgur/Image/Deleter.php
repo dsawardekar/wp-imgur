@@ -25,10 +25,14 @@ class Deleter {
   }
 
   function getImgurImages($postId) {
+    $images  = array();
     $post    = $this->imagePostType->findOne($postId);
+    if ($post === false) {
+      return $images;
+    }
+
     $content = $post->post_content;
     $json    = json_decode($content, true);
-    $images  = array();
 
     if (is_array($json)) {
       foreach ($json as $key => $variant) {
@@ -40,7 +44,16 @@ class Deleter {
   }
 
   function deleteImgurImage($imageId) {
-    return $this->imgurImageRepo->delete($imageId);
+    try {
+      return $this->imgurImageRepo->delete($imageId);
+    } catch (\Imgur\Exception $err) {
+      if ($err->getMessage() === 'Image not found') {
+        /* we'll ignore 404, assuming that image was already deleted */
+        return true;
+      } else {
+        throw $err;
+      }
+    }
   }
 
   function getImageId($url) {

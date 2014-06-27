@@ -59,16 +59,20 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
     var n = items.length;
     var item, task;
 
-    this.taskQueue.reset();
+    if (n > 0) {
+      this.taskQueue.reset();
 
-    for (i = 0; i < n; i++) {
-      item = items[i];
-      task = this.taskFor(item);
+      for (i = 0; i < n; i++) {
+        item = items[i];
+        task = this.taskFor(item);
 
-      this.taskQueue.add(task);
+        this.taskQueue.add(task);
+      }
+
+      this.taskQueue.start();
+    } else {
+      this.didTaskQueueComplete();
     }
-
-    this.taskQueue.start();
   },
 
   triggerQueueEvent: function() {
