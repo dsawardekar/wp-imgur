@@ -126,4 +126,26 @@ class PostTypeTest extends \WP_UnitTestCase {
     $this->assertEquals($expected, $images);
   }
 
+  function test_it_can_find_post_type_by_id() {
+    $this->postType->register();
+    $id = $this->postType->create('image 1', array('foo' => 1));
+    $post = $this->postType->findOne($id);
+    $actual = json_decode($post->post_content, true);
+
+    $this->assertEquals(array('foo' => 1), $actual);
+  }
+
+  function test_it_returns_false_if_post_type_not_found() {
+    $post = $this->postType->findOne(10001);
+    $this->assertFalse($post);
+  }
+
+  function test_it_can_delete_post() {
+    $this->postType->register();
+    $id = $this->postType->create('image 1', array('foo' => 1));
+    $post = $this->postType->delete($id);
+
+    $this->assertFalse($this->postType->findOne($id));
+  }
+
 }

@@ -89,6 +89,25 @@ SQL;
   }
 
   function findOne($id) {
+    $options = array(
+      'post_type'      => $this->getName(),
+      'p'           => $id,
+      'paged'          => 1,
+      'posts_per_page' => 1
+    );
+
+    $query = new \WP_Query($options);
+    $posts = $query->get_posts();
+
+    if (count($posts) === 1) {
+      return $posts[0];
+    } else {
+      return false;
+    }
+  }
+
+  function delete($postId) {
+    return wp_delete_post($postId, true);
   }
 
   function getName() {
