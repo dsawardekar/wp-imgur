@@ -42,12 +42,12 @@ var SyncController = Ember.ObjectController.extend({
         model.on(eventName, self, callback);
       });
 
-      var promise = model.startSync();
+      var promise = model.start();
     },
 
     stopSync: function() {
       var model = this.get('content');
-      model.stopSync();
+      model.stop();
     }
   }
 });

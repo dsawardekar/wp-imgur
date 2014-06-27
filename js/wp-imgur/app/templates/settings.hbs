@@ -28,7 +28,13 @@
 	<legend><span>Cleanup</span></legend>
   <p>If you wish to uninstall the plugin you can optionally empty the
   Album on Imgur.com {{site}} containing your synced images.</p>
-    <button class="button button-primary" {{action 'verifyPin'}}>Empty
-    Album</button>
+  {{wp-progress-button
+    startAction='startDeleteImage'
+    stopAction='stopDeleteImage'
+    startLabel='Empty Album'
+    stopLabel='Cancel'
+    progress=image.progress
+    started=image.active
+   }}
 </fieldset>
 </div>

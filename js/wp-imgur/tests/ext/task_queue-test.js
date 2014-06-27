@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import TaskQueue from 'wp-imgur/ext/task';
+import TaskQueue from 'wp-imgur/ext/task_queue';
 
 var stub = function() {};
 var stubError = function() { throw 'foo-error'; };
