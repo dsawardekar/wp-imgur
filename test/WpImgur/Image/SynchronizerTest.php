@@ -71,10 +71,10 @@ class SynchronizerTest extends \WP_UnitTestCase {
     );
   }
 
-  function setUpAttachment() {
+  function setUpAttachment($title = 'foo') {
     $attachment = $this->factory->post->create_and_get(
       array(
-        'post_title' => 'foo',
+        'post_title' => $title,
         'post_type' => 'attachment'
       )
     );
@@ -346,6 +346,43 @@ class SynchronizerTest extends \WP_UnitTestCase {
 
     $this->syncer->enable();
     do_action('added_post_meta', 100, $id, '_wp_attachment_metadata', 'foo');
+
+    $store = $this->lookup('imageStore');
+    $store->setSlug('foo-jpg');
+    $store->load();
+
+    $this->assertFalse($store->hasImage('original'));
+  }
+
+  function test_it_can_sync_image_after_edit() {
+    $this->container->factory('image', 'WpImgur\Image\SyncImage');
+    $id = $this->setUpAttachment();
+    $this->uploader->result = 'mirror';
+
+    $this->syncer->enable();
+    do_action('updated_post_meta', 100, $id, '_wp_attachment_metadata', 'foo');
+
+    $store = $this->lookup('imageStore');
+    $store->setSlug('foo-jpg');
+    $store->load();
+
+    $this->assertTrue($store->hasImage('original'));
+    $this->assertTrue($store->hasImage('150x150'));
+    $this->assertTrue($store->hasImage('300x194'));
+    $this->assertTrue($store->hasImage('1024x665'));
+    $this->assertTrue($store->hasImage('624x405'));
+  }
+
+  function test_it_will_not_sync_image_after_edit_if_disabled() {
+    $optionsStore = $this->container->lookup('optionsStore');
+    $optionsStore->setOption('syncOnMediaEdit', false);
+
+    $this->container->factory('image', 'WpImgur\Image\SyncImage');
+    $id = $this->setUpAttachment();
+    $this->uploader->result = 'mirror';
+
+    $this->syncer->enable();
+    do_action('updated_post_meta', 100, $id, '_wp_attachment_metadata', 'foo');
 
     $store = $this->lookup('imageStore');
     $store->setSlug('foo-jpg');

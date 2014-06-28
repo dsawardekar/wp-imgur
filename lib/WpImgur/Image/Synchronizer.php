@@ -16,12 +16,22 @@ class Synchronizer {
 
   function enable() {
     add_action('added_post_meta', array($this, 'onAttachmentMetaChange'), 10, 4);
+    add_action('updated_post_meta', array($this, 'onAttachmentMetaUpdate'), 10, 4);
   }
 
   function onAttachmentMetaChange($metaId, $postId, $metaKey, $metaValue) {
     if ($metaKey === '_wp_attachment_metadata') {
       $this->hookMode = true;
       if ($this->optionsStore->getOption('syncOnMediaUpload')) {
+        $this->sync($postId);
+      }
+    }
+  }
+
+  function onAttachmentMetaUpdate($metaId, $postId, $metaKey, $metaValue) {
+    if ($metaKey === '_wp_attachment_metadata') {
+      $this->hookMode = true;
+      if ($this->optionsStore->getOption('syncOnMediaEdit')) {
         $this->sync($postId);
       }
     }
