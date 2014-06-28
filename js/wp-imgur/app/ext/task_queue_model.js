@@ -36,6 +36,7 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
   start: function() {
     this.triggerQueueEvent('taskQueueStart');
     this.set('active', true);
+    this.set('current', null);
 
     if (this.get('didLoad')) {
       this.taskQueue.start();
@@ -102,7 +103,11 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
   },
 
   progress: function() {
-    return Math.round(this.taskQueue.get('progress'));
+    if (this.get('didLoad')) {
+      return Math.round(this.taskQueue.get('progress'));
+    } else {
+      return 0;
+    }
   }.property('taskQueue.progress'),
 
 });
