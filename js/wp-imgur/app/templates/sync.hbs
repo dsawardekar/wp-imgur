@@ -1,14 +1,16 @@
 <div class="sync">
   {{#if active}}
     <p>
-    Please wait while your Media is Synched to Imgur.com servers. This
+    Please wait while your Media is Synced to <a
+    href="http://imgur.com">Imgur</a> servers. This
     may take a few minutes depending on the size of your Media Library ...
     </p>
   {{else}}
     <p>
-    Uploads your Media Library to Imgur.com. You only need to do this
+    Uploads your Media Library to <a
+    href="http://imgur.com">Imgur</a>. You only need to do this
     the first time that you install WP-Imgur. All subsequent media uploads
-    are sent to the Imgur.com servers when you upload images via the Media
+    are automatically sent to the Imgur servers when you upload images via the Media
     Uploader.
     </p>
   {{/if}}
@@ -20,6 +22,8 @@
     progress=progress
     started=active
    }}
-   <img {{ bind-attr src=current.thumbnail }} {{ bind-attr class='active:sync-thumb:hide' }}/>
+   {{#if current.thumbnail }}
+     <img {{ bind-attr src=current.thumbnail }} {{ bind-attr class='active:sync-thumb:hide' }}/>
+   {{/if }}
 </div>
 

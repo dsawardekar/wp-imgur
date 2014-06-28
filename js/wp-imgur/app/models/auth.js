@@ -33,10 +33,14 @@ var AuthModel = Ember.Object.extend({
     };
 
     return api.request('auth', 'verifyPin', params)
-    .then(function(success) {
-      self.set('authorized', success);
+    .then(function(json) {
+      self.set('authorized', json.authorized);
       self.set('pin', '');
-      return success;
+
+      config.set('uploadMode', json.uploadMode);
+      config.set('album', json.album);
+
+      return json.authorized;
     });
   }
 });

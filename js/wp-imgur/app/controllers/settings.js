@@ -10,6 +10,10 @@ var SettingsController = Ember.ObjectController.extend({
   auth: auth,
   image: image,
 
+  albumUrl: function() {
+    return 'http://imgur.com/a/' + config.get('album');
+  }.property('config.album'),
+
   onDeleteImageStart: function() {
     Notice.show('progress', 'Deleting Images ...');
     pages.set('lockEnabled', true);
@@ -29,7 +33,8 @@ var SettingsController = Ember.ObjectController.extend({
   },
 
   onDeleteImageComplete: function() {
-    Notice.show('success', 'Album Emptied Successfully.');
+    var siteUrl = config.get('siteUrl');
+    Notice.show('success', 'Album "' + siteUrl + '" was emptied successfully.');
     pages.set('lockEnabled', false);
   },
 

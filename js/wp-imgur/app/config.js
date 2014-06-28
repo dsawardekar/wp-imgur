@@ -27,6 +27,18 @@ var Config = Ember.Object.extend({
     return this.get('store').authorizeUrl;
   }.property('store'),
 
+  album: function(name, value) {
+    if (this._album === undefined) {
+      this._album = this.get('store').album;
+    }
+
+    if (value !== undefined) {
+      this._album = value;
+    }
+
+    return this._album;
+  }.property('store'),
+
   syncOnMediaUpload: function(name, value) {
     if (this._syncOnMediaUpload === undefined) {
       this._syncOnMediaUpload = this.get('store').syncOnMediaUpload === '1';
@@ -49,6 +61,22 @@ var Config = Ember.Object.extend({
     }
 
     return this._syncOnMediaEdit;
+  }.property('store'),
+
+  siteUrl: function() {
+    return this.get('store').siteUrl;
+  }.property('store'),
+
+  uploadMode: function(name, value) {
+    if (this._uploadMode === undefined) {
+      this._uploadMode = this.get('store').uploadMode;
+    }
+
+    if (value !== undefined) {
+      this._uploadMode = value;
+    }
+
+    return this._uploadMode;
   }.property('store')
 
 });

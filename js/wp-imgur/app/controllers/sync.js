@@ -11,7 +11,6 @@ var SyncController = Ember.ObjectController.extend({
   onSyncProgress: function() {
     var model = this.get('content');
     Notice.show('progress', 'Synchronizing ' + model.get('current.name') + ' ...');
-
   },
 
   onSyncStop: function() {
@@ -20,7 +19,7 @@ var SyncController = Ember.ObjectController.extend({
   },
 
   onSyncError: function(error) {
-    Notice.show('error', 'Sync Failed: ' + error);
+    Notice.show('error', error);
     pages.set('lockEnabled', false);
   },
 

@@ -6,11 +6,12 @@ class AuthController extends \Arrow\Ajax\Controller {
 
   public $imgurAdapter;
   public $syncPreparer;
+  public $optionsStore;
 
   function needs() {
     return array_merge(
       parent::needs(),
-      array('imgurAdapter', 'syncPreparer')
+      array('imgurAdapter', 'syncPreparer', 'optionsStore')
     );
   }
 
@@ -36,7 +37,11 @@ class AuthController extends \Arrow\Ajax\Controller {
         $result = $this->imgurAdapter->verifyPin($pin);
         $this->syncPreparer->prepare();
 
-        return $result;
+        return array(
+          'authorized' => $result,
+          'uploadMode' => $this->optionsStore->getOption('uploadMode'),
+          'album'      => $this->optionsStore->getOption('album')
+        );
       } catch (\Imgur\Exception $error) {
         return $this->error($error->getMessage());
       }

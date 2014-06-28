@@ -7,8 +7,9 @@
 	<legend>
     <span>Media Uploader Integration</span>
   </legend>
-  <p>If you wish to uninstall the plugin you can optionally empty the
-  Imgur Album {{site}} containing your synced images.</p>
+  <p>WP Imgur can auto sync any new images you upload or edit in
+  WordPress. You can
+change this behaviour below.</p>
   <p>
 	<label>
     {{input type="checkbox" name="syncOnMediaUpload"
@@ -27,7 +28,7 @@
 <fieldset>
 	<legend><span>Cleanup</span></legend>
   <p>If you wish to uninstall the plugin you can optionally empty the
-  Album on Imgur.com {{site}} containing your synced images.</p>
+  <a {{ bind-attr href='albumUrl' }}>Album</a> on the Imgur server containing your synced images.</p>
   {{wp-progress-button
     startAction='startDeleteImage'
     stopAction='stopDeleteImage'

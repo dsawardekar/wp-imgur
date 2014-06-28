@@ -95,7 +95,7 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
     this.triggerQueueEvent('taskQueueComplete');
   },
 
-  didTaskQueueError: function(error) {
+  didTaskQueueError: function(task, error) {
     this.set('active', false);
     this.triggerQueueEvent('taskQueueError', error);
     this.taskQueue.stop();

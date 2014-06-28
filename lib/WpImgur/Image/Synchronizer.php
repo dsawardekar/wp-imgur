@@ -92,6 +92,7 @@ class Synchronizer {
       }
     } catch (\Imgur\Exception $e) {
       $error = "WP-Imgur Image Upload Failed: {$image->getUrl()} - " . $e->getMessage();
+
       if (!$this->hookMode) {
         $this->ajaxJsonPrinter->sendError($error);
       } elseif (!defined('PHPUNIT_RUNNER')) {

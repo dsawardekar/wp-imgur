@@ -45,7 +45,6 @@ fieldset legend {
 
 .nav-tab-wrapper a {
   border-radius: 3px 3px 0px 0px;
-  /*visibility: hidden;*/
 }
 
 .nav-disabled {
@@ -86,20 +85,11 @@ fieldset legend {
 }
 
 .wrap-settings {
-  /*max-width: 640px;*/
   margin-top: 1.5em;
-  /*padding-bottom: 1em;*/
 }
 
 .wrap-settings p {
   margin: 0 0 1em 0;
-}
-
-.pin-input {
-  /*line-height: 1.4em;*/
-}
-
-.button-primary {
 }
 
 .button-ajax {
@@ -137,11 +127,6 @@ fieldset legend {
 
 .wp-button-view {
   display: inline-block;
-}
-
-.wp-button {
-  /*border: 1px solid red;*/
-  /*display: inline-block;*/
 }
 
 .wp-button-spinner {

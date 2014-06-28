@@ -30,7 +30,10 @@ class PluginMeta extends \Arrow\PluginMeta {
       'authorized'        => $imgurAdapter->isAuthorized(),
       'authorizeUrl'      => $imgurAdapter->authorizeUrl(),
       'syncOnMediaUpload' => $optionsStore->getOption('syncOnMediaUpload'),
-      'syncOnMediaEdit'   => $optionsStore->getOption('syncOnMediaEdit')
+      'syncOnMediaEdit'   => $optionsStore->getOption('syncOnMediaEdit'),
+      'uploadMode'        => $optionsStore->getOption('uploadMode'),
+      'album'             => $optionsStore->getOption('album'),
+      'siteUrl'           => site_url(),
     );
   }
 
