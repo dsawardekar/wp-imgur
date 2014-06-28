@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "383573025c3dd19817480e6969df0ae4",
+    "hash": "1c9bc036d84b8cf5aa3f3308a7115cd4",
     "packages": [
         {
             "name": "dsawardekar/arrow",
-            "version": "dev-develop",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dsawardekar/arrow.git",
-                "reference": "7ae17ccc26e1ff1a66a9759e62867bc1bc7de33f"
+                "reference": "9b8a23fffc22bef7f066aaad15ad1751ccc5a657"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dsawardekar/arrow/zipball/7ae17ccc26e1ff1a66a9759e62867bc1bc7de33f",
-                "reference": "7ae17ccc26e1ff1a66a9759e62867bc1bc7de33f",
+                "url": "https://api.github.com/repos/dsawardekar/arrow/zipball/9b8a23fffc22bef7f066aaad15ad1751ccc5a657",
+                "reference": "9b8a23fffc22bef7f066aaad15ad1751ccc5a657",
                 "shasum": ""
             },
             "require": {
@@ -56,7 +56,7 @@
                 "wordpress",
                 "wordpress plugins"
             ],
-            "time": "2014-06-21 10:36:42"
+            "time": "2014-06-28 10:54:20"
         },
         {
             "name": "dsawardekar/encase-php",
@@ -104,16 +104,16 @@
         },
         {
             "name": "dsawardekar/imgur-api",
-            "version": "dev-develop",
+            "version": "0.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dsawardekar/imgur-api.git",
-                "reference": "32e354d5557be00be41a2bbd76470477ecb6df82"
+                "reference": "e651f9a291cb543bc68e229a73e35834c93fba11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dsawardekar/imgur-api/zipball/32e354d5557be00be41a2bbd76470477ecb6df82",
-                "reference": "32e354d5557be00be41a2bbd76470477ecb6df82",
+                "url": "https://api.github.com/repos/dsawardekar/imgur-api/zipball/e651f9a291cb543bc68e229a73e35834c93fba11",
+                "reference": "e651f9a291cb543bc68e229a73e35834c93fba11",
                 "shasum": ""
             },
             "require": {
@@ -148,7 +148,7 @@
                 "images",
                 "imgur"
             ],
-            "time": "2014-06-22 15:16:51"
+            "time": "2014-06-28 10:50:47"
         },
         {
             "name": "dsawardekar/wp-requirements",
@@ -761,10 +761,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "dsawardekar/arrow": 20,
-        "dsawardekar/imgur-api": 20
-    },
+    "stability-flags": [
+
+    ],
     "platform": [
 
     ],
