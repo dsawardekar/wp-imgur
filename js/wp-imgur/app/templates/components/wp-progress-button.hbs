@@ -1,0 +1,8 @@
+<div class="wp-progress-button">
+  <button
+    {{ bind-attr class=buttonClassList }}
+    {{ action 'buttonClick' this }}
+  >{{ label }}</button>
+  <span
+    {{ bind-attr class=progressClassList }}>{{ progressText }}%</span>
+</div>
