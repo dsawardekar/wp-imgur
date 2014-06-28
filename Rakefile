@@ -81,7 +81,12 @@ namespace :ember do
   task :dist do
     base = Dir.pwd
     Dir.chdir("js/#{plugin_slug}") do
-      system({'WRAP_IN_EVAL' => '0'}, 'ember build --env development')
+      config = {
+        'WRAP_IN_EVAL'  => '0',
+        'REMOVE_JQUERY' => '1',
+        'REMOVE_TESTS'  => '1'
+      }
+      system(config, 'ember build --env development')
 
       cp "dist/assets/vendor.css"         ,  "#{base}/css/#{plugin_slug}-vendor.css"
       cp "dist/assets/#{plugin_slug}.css" ,  "#{base}/css/#{plugin_slug}-app.css"

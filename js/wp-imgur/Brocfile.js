@@ -11,6 +11,10 @@ if (process.env.WRAP_IN_EVAL) {
   config.wrapInEval = process.env.WRAP_IN_EVAL === '1';
 }
 
+if (process.env.REMOVE_TESTS) {
+  config.tests = false;
+}
+
 var app = new EmberApp(config);
 
 var removeLibrary = function(name) {
@@ -23,7 +27,9 @@ var removeLibrary = function(name) {
   app.legacyFilesToAppend = filtered;
 };
 
-//removeLibrary('jquery');
+if (process.env.REMOVE_JQUERY) {
+  removeLibrary('jquery');
+}
 
 app.import('vendor/ember-validations/dist/ember-validations.js');
 app.import('vendor/ember-easyForm/dist/ember-easyForm.js');
