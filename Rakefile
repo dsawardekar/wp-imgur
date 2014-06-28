@@ -29,7 +29,7 @@ namespace :git do
     sh 'git rm phpunit.xml'
     sh 'git rm Gemfile'
     sh 'git rm Rakefile'
-    sh "git rm -rf js/#{plugin_slug}" if File.directory("js/#{plugin_slug}")
+    sh "git rm -rf js/#{plugin_slug}" if File.directory?("js/#{plugin_slug}")
 
     sh 'git commit -m "Removes development files [ci-skip]"'
   end
