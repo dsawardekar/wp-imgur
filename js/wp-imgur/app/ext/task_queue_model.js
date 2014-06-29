@@ -19,7 +19,7 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
 
   init: function() {
     var taskQueue = TaskQueue.create({ batchSize: this.get('batchSize') });
-    taskQueue.on('taskQueueStart'  , this , this.didTaskQueueStart);
+    taskQueue.on('taskQueueStart'    , this , this.didTaskQueueStart);
     taskQueue.on('taskQueueProgress' , this , this.didTaskQueueProgress);
     taskQueue.on('taskQueueComplete' , this , this.didTaskQueueComplete);
     taskQueue.on('taskQueueError'    , this , this.didTaskQueueError);
@@ -39,13 +39,13 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
     this.triggerQueueEvent('taskQueueStart');
     this.set('active', true);
     this.set('current', null);
-    this.set('loading', true);
 
     if (this.get('didLoad')) {
       this.taskQueue.start();
     } else {
       var self = this;
 
+      this.set('loading', true);
       this.load().then(function(items) {
         self.set('didLoad', true);
         self.startQueue(items);
@@ -61,7 +61,6 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
 
 
   startQueue: function(items) {
-
     var i = 0;
     var n = items.length;
     var item, task;
@@ -114,10 +113,10 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
   },
 
   progress: function() {
-    if (!this.get('loading')) {
-      return Math.round(this.taskQueue.get('progress'));
-    } else {
+    if (this.get('loading')) {
       return 0;
+    } else {
+      return Math.round(this.taskQueue.get('progress'));
     }
   }.property('taskQueue.progress'),
 
