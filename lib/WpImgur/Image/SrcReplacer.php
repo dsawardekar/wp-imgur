@@ -19,7 +19,7 @@ class SrcReplacer {
   }
 
   function enable() {
-    add_filter('the_content', array($this, 'replace'), '90');
+    add_filter('the_content', array($this, 'replace'), 90);
   }
 
   function replace($content) {

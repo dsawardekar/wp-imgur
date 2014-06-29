@@ -24,3 +24,4 @@ portkey.json
 phpunit.xml
 phpunit*
 bin/
+examples/

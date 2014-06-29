@@ -2,11 +2,12 @@ import Ember from 'ember';
 import TaskQueue from 'wp-imgur/ext/task_queue';
 
 var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
-  taskQueue : null,
-  active    : false,
-  batchSize : 4,
-  didLoad   : false,
-  current   : null,
+  taskQueue        : null,
+  active           : false,
+  batchSize        : 4,
+  didLoad          : false,
+  current          : null,
+  loading: false,
 
   taskEvents            : {
     'taskQueueStart'    : 'taskQueueStart',
@@ -18,9 +19,10 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
 
   init: function() {
     var taskQueue = TaskQueue.create({ batchSize: this.get('batchSize') });
-    taskQueue.on('taskQueueProgress' , this, this.didTaskQueueProgress);
-    taskQueue.on('taskQueueComplete' , this, this.didTaskQueueComplete);
-    taskQueue.on('taskQueueError'    , this, this.didTaskQueueError);
+    taskQueue.on('taskQueueStart'    , this , this.didTaskQueueStart);
+    taskQueue.on('taskQueueProgress' , this , this.didTaskQueueProgress);
+    taskQueue.on('taskQueueComplete' , this , this.didTaskQueueComplete);
+    taskQueue.on('taskQueueError'    , this , this.didTaskQueueError);
 
     this.set('taskQueue', taskQueue);
   },
@@ -36,11 +38,14 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
   start: function() {
     this.triggerQueueEvent('taskQueueStart');
     this.set('active', true);
+    this.set('current', null);
 
     if (this.get('didLoad')) {
       this.taskQueue.start();
     } else {
       var self = this;
+
+      this.set('loading', true);
       this.load().then(function(items) {
         self.set('didLoad', true);
         self.startQueue(items);
@@ -53,6 +58,7 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
     this.taskQueue.stop();
     this.triggerQueueEvent('taskQueueStop');
   },
+
 
   startQueue: function(items) {
     var i = 0;
@@ -84,6 +90,10 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
     return this.trigger.apply(this, args);
   },
 
+  didTaskQueueStart: function() {
+    this.set('loading', false);
+  },
+
   didTaskQueueProgress: function(task) {
     this.set('current', task.get('output'));
     this.triggerQueueEvent('taskQueueProgress');
@@ -93,6 +103,7 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
     this.set('active', false);
     this.set('didLoad', false);
     this.triggerQueueEvent('taskQueueComplete');
+    this.taskQueue.reset();
   },
 
   didTaskQueueError: function(task, error) {
@@ -102,7 +113,11 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
   },
 
   progress: function() {
-    return Math.round(this.taskQueue.get('progress'));
+    if (this.get('loading')) {
+      return 0;
+    } else {
+      return Math.round(this.taskQueue.get('progress'));
+    }
   }.property('taskQueue.progress'),
 
 });

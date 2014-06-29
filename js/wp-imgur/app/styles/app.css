@@ -39,6 +39,10 @@ fieldset legend {
   margin-top: 1em;
 }
 
+.nav-tab-wrapper {
+  margin-bottom: 0.5em;
+}
+
 .nav-tab-wrapper span {
   margin-right: 0.5em;
 }

@@ -117,7 +117,6 @@ var TaskQueue = Ember.Object.extend(Ember.Evented, {
             self.didTaskComplete(task, output);
           })
           .catch(function(error) {
-            console.log('TQ.runTask: error', error);
             self.didTaskError(task, error);
           });
       } else {
@@ -158,9 +157,8 @@ var TaskQueue = Ember.Object.extend(Ember.Evented, {
       this.running.splice(index, 1);
       this.failures.pushObject(task);
       this.peek(task);
+      this.trigger('taskQueueError', task, error);
     }
-
-    this.trigger('taskQueueError', task, error);
   },
 
   peek: function(task) {

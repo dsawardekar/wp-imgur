@@ -29,7 +29,10 @@ namespace :git do
     sh 'git rm phpunit.xml'
     sh 'git rm Gemfile'
     sh 'git rm Rakefile'
-    sh "git rm -rf js/#{plugin_slug}" if File.directory("js/#{plugin_slug}")
+    sh "git rm -rf js/#{plugin_slug}" if File.directory?("js/#{plugin_slug}")
+    sh 'git rm .travis.yml'           if File.exists?('.travis.yml')
+    sh 'git rm .scrutinizer.yml'      if File.exists?('.scrutinizer.yml')
+    sh 'git rm .coveralls.yml'        if File.exists?('.coveralls.yml')
 
     sh 'git commit -m "Removes development files [ci-skip]"'
   end
@@ -78,7 +81,12 @@ namespace :ember do
   task :dist do
     base = Dir.pwd
     Dir.chdir("js/#{plugin_slug}") do
-      system({'WRAP_IN_EVAL' => '0'}, 'ember build --env development')
+      config = {
+        'WRAP_IN_EVAL'  => '0',
+        'REMOVE_JQUERY' => '1',
+        'REMOVE_TESTS'  => '1'
+      }
+      system(config, 'ember build --env development')
 
       cp "dist/assets/vendor.css"         ,  "#{base}/css/#{plugin_slug}-vendor.css"
       cp "dist/assets/#{plugin_slug}.css" ,  "#{base}/css/#{plugin_slug}-app.css"
