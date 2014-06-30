@@ -6,6 +6,8 @@ class SyncPreparer {
 
   public $pluginMeta;
   public $imgurAlbumRepo;
+  public $imgurImageRepo;
+  public $optionsStore;
 
   function needs() {
     return array(
@@ -17,9 +19,6 @@ class SyncPreparer {
   }
 
   function prepare() {
-    // TODO: remove after Arrow bugfix
-    $this->optionsStore->load();
-
     $this->createAlbum();
     $this->detectUploadMode();
 
@@ -45,7 +44,7 @@ class SyncPreparer {
 
     if ($albumId !== '') {
       try {
-        $album = $this->imgurAlbumRepo->find($albumId);
+        $this->imgurAlbumRepo->find($albumId);
         return true;
       } catch (\Imgur\Exception $err)  {
         return false;

@@ -8,6 +8,7 @@ class Synchronizer {
   public $attachmentPostType;
   public $imageUploader;
   public $ajaxJsonPrinter;
+  public $optionsStore;
   public $hookMode = false;
 
   function needs() {
