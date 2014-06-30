@@ -65,6 +65,16 @@ class PostTypeTest extends \WP_UnitTestCase {
     $this->assertEquals('m%c3%bbr-pouvait-%c3%aatre-%c3%a9crit-m%c3%abur', $actual);
   }
 
+  function test_it_can_convert_json_to_images_if_valid() {
+    $images = $this->postType->toImages('{"foo":"bar"}');
+    $this->assertEquals(array('foo' => 'bar'), $images);
+  }
+
+  function test_it_returns_empty_array_if_failed_to_json_decode() {
+    $images = $this->postType->toImages('{"foo":"bar"');
+    $this->assertEmpty($images);
+  }
+
   function test_it_can_store_image_details() {
     $this->postType->register();
 
