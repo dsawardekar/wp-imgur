@@ -27,7 +27,7 @@ class SyncPreparer {
   }
 
   function createAlbum() {
-    if ($this->optionsStore->getOption('album') === '') {
+    if (!$this->albumExists()) {
       $params = array(
         'title' => site_url()
       );
@@ -38,6 +38,21 @@ class SyncPreparer {
     }
 
     return false;
+  }
+
+  function albumExists() {
+    $albumId = $this->optionsStore->getOption('album');
+
+    if ($albumId !== '') {
+      try {
+        $album = $this->imgurAlbumRepo->find($albumId);
+        return true;
+      } catch (\Imgur\Exception $err)  {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 
   function detectUploadMode() {

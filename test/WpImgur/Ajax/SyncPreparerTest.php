@@ -44,9 +44,32 @@ class SyncPreparerTest extends \WP_UnitTestCase {
     $this->assertSame($this->albumRepo, $this->preparer->imgurAlbumRepo);
   }
 
-  function test_it_does_not_create_album_if_present() {
+  function test_it_knows_if_album_does_not_exist() {
     $this->store->setOption('album', 'foo');
-    $this->assertFalse($this->preparer->createAlbum());
+    $repo = $this->getMock('Imgur\AlbumRepo');
+    $repo->expects($this->once())
+      ->method('find')
+      ->with('foo')
+      ->will($this->throwException(new \Imgur\Exception('Unable to find album with id, foo')));
+
+    $this->preparer->imgurAlbumRepo = $repo;
+    $actual = $this->preparer->albumExists();
+
+    $this->assertFalse($actual);
+  }
+
+  function test_it_knows_if_album_exists() {
+    $this->store->setOption('album', 'foo');
+    $repo = $this->getMock('Imgur\AlbumRepo');
+    $repo->expects($this->once())
+      ->method('find')
+      ->with('foo')
+      ->will($this->returnValue(array('id' => 'foo', 'title' => 'foo-album')));
+
+    $this->preparer->imgurAlbumRepo = $repo;
+    $actual = $this->preparer->albumExists();
+
+    $this->assertTrue($actual);
   }
 
   function test_it_creates_album_if_absent() {
