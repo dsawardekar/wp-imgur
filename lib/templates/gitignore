@@ -3,7 +3,6 @@
 *.lock
 *.rst
 *.md
-.travis.yml
 .scrutinizer.yml
 .editorconfig
 wp-cli*.yml
