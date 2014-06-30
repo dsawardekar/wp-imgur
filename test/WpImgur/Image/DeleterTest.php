@@ -91,6 +91,12 @@ class DeleterTest extends \WP_UnitTestCase {
     $actual = $this->deleter->deleteImgurImage('foo');
   }
 
+  function test_it_returns_empty_array_if_post_not_found() {
+    $this->postType->register();
+    $images = $this->deleter->getImgurImages(10001);
+    $this->assertEmpty($images);
+  }
+
   function test_it_can_find_imgur_images_for_post_id() {
     $this->postType->register();
     $content = array(
