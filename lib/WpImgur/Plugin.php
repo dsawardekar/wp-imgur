@@ -27,7 +27,6 @@ class Plugin extends \Arrow\Plugin {
   }
 
   function initFrontEnd() {
-    $this->lookup('imagePostType')->register();
     $this->lookup('imageSrcReplacer')->enable();
   }
 
