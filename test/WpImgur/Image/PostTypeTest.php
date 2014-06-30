@@ -74,6 +74,19 @@ class PostTypeTest extends \WP_UnitTestCase {
     $this->assertInternalType('int', $result);
   }
 
+  function test_it_can_update_image_details() {
+    $this->postType->register();
+
+    $content = array('foo' => 'bar');
+    $id = $this->postType->create('an image', $content);
+
+    $content = array('foo' => 'bar', 'lorem' => 'ipsum');
+    $result = $this->postType->update($id, $content);
+
+    $json = $this->postType->find('an image');
+    $this->assertEquals($content, $json);
+  }
+
   function test_it_can_find_stored_image() {
     $this->postType->register();
     $content = array(
