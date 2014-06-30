@@ -70,9 +70,12 @@ class Store {
   }
 
   function fetch() {
-    $images = $this->imagePostType->find($this->getSlug());
-    if ($images === false) {
+    $result = $this->imagePostType->find($this->getSlug());
+    if ($result === false) {
       $images = array();
+    } else {
+      $images = $result['images'];
+      $this->id = $result['post']->ID;
     }
 
     return $images;

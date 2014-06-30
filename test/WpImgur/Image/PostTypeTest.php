@@ -93,8 +93,21 @@ class PostTypeTest extends \WP_UnitTestCase {
     $content = array('foo' => 'bar', 'lorem' => 'ipsum');
     $result = $this->postType->update($id, $content);
 
-    $json = $this->postType->find('an image');
-    $this->assertEquals($content, $json);
+    $result = $this->postType->find('an image');
+    $this->assertEquals($content, $result['images']);
+  }
+
+  function test_it_sends_post_along_with_images_in_find() {
+    $this->postType->register();
+
+    $content = array('foo' => 'bar');
+    $id = $this->postType->create('an image', $content);
+
+    $content = array('foo' => 'bar', 'lorem' => 'ipsum');
+    $result = $this->postType->update($id, $content);
+
+    $result = $this->postType->find('an image');
+    $this->assertEquals($id, $result['post']->ID);
   }
 
   function test_it_can_find_stored_image() {
@@ -104,7 +117,8 @@ class PostTypeTest extends \WP_UnitTestCase {
     );
     $this->postType->create('an image', $content);
 
-    $json = $this->postType->find('an image');
+    $result = $this->postType->find('an image');
+    $json = $result['images'];
 
     $this->assertEquals('foo', $json['sizes']['100x100']);
   }

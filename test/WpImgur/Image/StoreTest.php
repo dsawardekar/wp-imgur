@@ -8,6 +8,7 @@ class ImageStoreTest extends \WP_UnitTestCase {
 
   public $container;
   public $store;
+  public $postType;
 
   function setUp() {
     parent::setUp();
@@ -19,6 +20,7 @@ class ImageStoreTest extends \WP_UnitTestCase {
       ->factory('imageStore', 'WpImgur\Image\Store');
 
     $this->store = $this->container->lookup('imageStore');
+    $this->postType = $this->container->lookup('imagePostType');
   }
 
   function lookup($key) {
@@ -125,6 +127,8 @@ class ImageStoreTest extends \WP_UnitTestCase {
     $this->assertEquals('two', $this->store->getImageUrl('200x200'));
     $this->assertEquals('three', $this->store->getImageUrl('original'));
     $this->assertEquals(3, $this->store->count());
+
+    $this->assertEquals(1, count($this->postType->findAll()));
   }
 
 }
