@@ -2,14 +2,22 @@
 
 namespace WpImgur;
 
+use Encase\Container;
+
 class PluginMetaTest extends \WP_UnitTestCase {
 
   public $meta;
+  public $container;
 
   function setUp() {
     parent::setUp();
 
-    $this->meta = new PluginMeta('wp-imgur.php');
+    $this->container = new Container();
+    $this->container
+      ->object('pluginMeta', new PluginMeta('wp-imgur.php'))
+      ->packager('optionsStore', 'Arrow\Options\Packager')
+      ->packager('imgurApiPackager', 'WpImgur\Api\Packager');
+    $this->meta = $this->container->lookup('pluginMeta');
   }
 
   function test_it_is_an_arrow_plugin_meta() {
@@ -42,6 +50,34 @@ class PluginMetaTest extends \WP_UnitTestCase {
   function test_it_uses_push_mode_by_default() {
     $options = $this->meta->getDefaultOptions();
     $this->assertEquals('push', $options['uploadMode']);
+  }
+
+  function test_it_has_valid_options_context() {
+    $adapterMock = $this->getMock('Imgur\Adapter');
+    $adapterMock->expects($this->once())
+      ->method('isAuthorized')
+      ->will($this->returnValue(false));
+
+    $adapterMock->expects($this->once())
+      ->method('authorizeUrl')
+      ->will($this->returnValue('foo-url'));
+
+    $optionsStore = $this->container->lookup('optionsStore');
+    $optionsStore->setOption('syncOnMediaUpload', false);
+    $optionsStore->setOption('syncOnMediaEdit', false);
+    $optionsStore->setOption('uploadMode', 'pull');
+    $optionsStore->setOption('album', 'foo');
+
+    $this->container->object('imgurAdapter',  $adapterMock);
+    $actual = $this->meta->getOptionsContext();
+
+    $this->assertEquals(false, $actual['authorized']);
+    $this->assertEquals('foo-url', $actual['authorizeUrl']);
+    $this->assertEquals(false, $actual['syncOnMediaUpload']);
+    $this->assertEquals(false, $actual['syncOnMediaEdit']);
+    $this->assertEquals('pull', $actual['uploadMode']);
+    $this->assertEquals('foo',  $actual['album']);
+    $this->assertEquals(site_url(), $actual['siteUrl']);
   }
 
 }
