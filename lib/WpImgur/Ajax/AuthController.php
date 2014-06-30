@@ -31,20 +31,15 @@ class AuthController extends \Arrow\Ajax\Controller {
     $validator->rule('safeText', 'pin');
 
     if ($validator->validate()) {
-      $pin = $this->params['pin'];
+      $pin    = $this->params['pin'];
+      $result = $this->imgurAdapter->verifyPin($pin);
+      $this->syncPreparer->prepare();
 
-      try {
-        $result = $this->imgurAdapter->verifyPin($pin);
-        $this->syncPreparer->prepare();
-
-        return array(
-          'authorized' => $result,
-          'uploadMode' => $this->optionsStore->getOption('uploadMode'),
-          'album'      => $this->optionsStore->getOption('album')
-        );
-      } catch (\Imgur\Exception $error) {
-        return $this->error($error->getMessage());
-      }
+      return array(
+        'authorized' => $result,
+        'uploadMode' => $this->optionsStore->getOption('uploadMode'),
+        'album'      => $this->optionsStore->getOption('album')
+      );
     } else {
       return $this->error($validator->errors());
     }

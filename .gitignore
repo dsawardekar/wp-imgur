@@ -7,3 +7,5 @@ wp-cli*.yml
 bower_components
 node_modules
 test/WpImgur/CreditsTest.php
+.coveralls.yml
+clover.xml

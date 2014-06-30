@@ -55,6 +55,14 @@ class PostTypeTest extends \WP_UnitTestCase {
     $this->assertTrue(post_type_exists('imgur_image'));
   }
 
+  function test_it_does_not_register_if_already_registered() {
+    $this->postType->register();
+    $this->postType->didRegister = 'already_registered';
+
+    $this->postType->register();
+    $this->assertEquals('already_registered', $this->postType->didRegister);
+  }
+
   function test_it_can_convert_post_name_to_slug() {
     $actual = $this->postType->toSlug('Hello World');
     $this->assertEquals('hello-world', $actual);
@@ -63,6 +71,16 @@ class PostTypeTest extends \WP_UnitTestCase {
   function test_it_can_convert_post_name_with_accented_characters_to_slug() {
     $actual = $this->postType->toSlug('mûr pouvait être écrit mëur');
     $this->assertEquals('m%c3%bbr-pouvait-%c3%aatre-%c3%a9crit-m%c3%abur', $actual);
+  }
+
+  function test_it_can_convert_json_to_images_if_valid() {
+    $images = $this->postType->toImages('{"foo":"bar"}');
+    $this->assertEquals(array('foo' => 'bar'), $images);
+  }
+
+  function test_it_returns_empty_array_if_failed_to_json_decode() {
+    $images = $this->postType->toImages('{"foo":"bar"');
+    $this->assertEmpty($images);
   }
 
   function test_it_can_store_image_details() {
@@ -74,6 +92,32 @@ class PostTypeTest extends \WP_UnitTestCase {
     $this->assertInternalType('int', $result);
   }
 
+  function test_it_can_update_image_details() {
+    $this->postType->register();
+
+    $content = array('foo' => 'bar');
+    $id = $this->postType->create('an image', $content);
+
+    $content = array('foo' => 'bar', 'lorem' => 'ipsum');
+    $result = $this->postType->update($id, $content);
+
+    $result = $this->postType->find('an image');
+    $this->assertEquals($content, $result['images']);
+  }
+
+  function test_it_sends_post_along_with_images_in_find() {
+    $this->postType->register();
+
+    $content = array('foo' => 'bar');
+    $id = $this->postType->create('an image', $content);
+
+    $content = array('foo' => 'bar', 'lorem' => 'ipsum');
+    $result = $this->postType->update($id, $content);
+
+    $result = $this->postType->find('an image');
+    $this->assertEquals($id, $result['post']->ID);
+  }
+
   function test_it_can_find_stored_image() {
     $this->postType->register();
     $content = array(
@@ -81,7 +125,8 @@ class PostTypeTest extends \WP_UnitTestCase {
     );
     $this->postType->create('an image', $content);
 
-    $json = $this->postType->find('an image');
+    $result = $this->postType->find('an image');
+    $json = $result['images'];
 
     $this->assertEquals('foo', $json['sizes']['100x100']);
   }

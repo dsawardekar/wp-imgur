@@ -6,6 +6,8 @@ class SyncPreparer {
 
   public $pluginMeta;
   public $imgurAlbumRepo;
+  public $imgurImageRepo;
+  public $optionsStore;
 
   function needs() {
     return array(
@@ -17,9 +19,6 @@ class SyncPreparer {
   }
 
   function prepare() {
-    // TODO: remove after Arrow bugfix
-    $this->optionsStore->load();
-
     $this->createAlbum();
     $this->detectUploadMode();
 
@@ -27,7 +26,7 @@ class SyncPreparer {
   }
 
   function createAlbum() {
-    if ($this->optionsStore->getOption('album') === '') {
+    if (!$this->albumExists()) {
       $params = array(
         'title' => site_url()
       );
@@ -38,6 +37,21 @@ class SyncPreparer {
     }
 
     return false;
+  }
+
+  function albumExists() {
+    $albumId = $this->optionsStore->getOption('album');
+
+    if ($albumId !== '') {
+      try {
+        $this->imgurAlbumRepo->find($albumId);
+        return true;
+      } catch (\Imgur\Exception $err)  {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 
   function detectUploadMode() {

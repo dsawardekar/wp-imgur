@@ -59,7 +59,7 @@ class Deleter {
   function getImageId($url) {
     $urlParts = parse_url($url);
 
-    if (array_key_exists('host', $urlParts) && strstr($urlParts['host'], 'imgur.com')) {
+    if ($urlParts !== false && array_key_exists('host', $urlParts) && strstr($urlParts['host'], 'imgur.com')) {
       $info = pathinfo($urlParts['path']);
       return $info['filename'];
     } else {

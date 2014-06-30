@@ -4,10 +4,16 @@ namespace WpImgur\Image;
 
 class PostType {
 
+  public $didRegister = false;
+
   function register() {
-    register_post_type(
-      $this->getName(), $this->getOptions()
-    );
+    if (!$this->didRegister) {
+      register_post_type(
+        $this->getName(), $this->getOptions()
+      );
+
+      $this->didRegister = true;
+    }
   }
 
   function create($postName, $content) {
@@ -44,7 +50,12 @@ class PostType {
     if (count($posts) === 1) {
       $post    = $posts[0];
       $content = $post->post_content;
-      return $this->toImages($content);
+      $images  = $this->toImages($content);
+
+      return array(
+        'post' => $post,
+        'images' => $images
+      );
     } else {
       return false;
     }

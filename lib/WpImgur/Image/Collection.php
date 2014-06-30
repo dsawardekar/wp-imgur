@@ -7,6 +7,7 @@ class Collection {
   public $container;
   public $imagePostType;
   public $didLoad = false;
+  public $images;
 
   function needs() {
     return array('imagePostType');

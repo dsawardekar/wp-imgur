@@ -72,7 +72,7 @@ class AuthControllerTest extends \WP_UnitTestCase {
     $this->assertInstanceOf('Arrow\Ajax\ControllerError', $actual);
   }
 
-  function test_it_will_return_true_for_valid_pin() {
+  function test_it_will_success_for_valid_pin() {
     $mock = $this->getMock('Imgur\Adapter');
     $mock->expects($this->once())
       ->method('verifyPin')
@@ -86,11 +86,15 @@ class AuthControllerTest extends \WP_UnitTestCase {
       ->method('prepare');
 
     $this->controller->syncPreparer = $mock;
+    $this->store->setOption('uploadMode', 'pull');
+    $this->store->setOption('album', 'foo');
 
     $this->controller->params = array('pin' => 'valid_pin');
     $actual = $this->controller->verifyPin();
 
-    $this->assertTrue($actual);
+    $this->assertTrue($actual['authorized']);
+    $this->assertEquals('pull', $actual['uploadMode']);
+    $this->assertEquals('foo', $actual['album']);
   }
 
 

@@ -20,6 +20,7 @@ class CollectionTest extends \WP_UnitTestCase {
       ->factory('imageCollection', 'WpImgur\Image\Collection');
 
     $this->postType = $this->container->lookup('imagePostType');
+    $this->postType->register();
     $this->collection = $this->container->lookup('imageCollection');
   }
 

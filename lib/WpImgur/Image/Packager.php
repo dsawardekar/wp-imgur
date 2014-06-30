@@ -13,7 +13,12 @@ class Packager {
       ->singleton('imageDeleter'      , 'WpImgur\Image\Deleter')
       ->singleton('imagePostType'     , 'WpImgur\Image\PostType')
       ->singleton('imageUploader'     , 'WpImgur\Image\Uploader')
-      ->singleton('imageSynchronizer' , 'WpImgur\Image\Synchronizer');
+      ->singleton('imageSynchronizer' , 'WpImgur\Image\Synchronizer')
+      ->initializer('imagePostType'   , array($this, 'initializePostType'));
+  }
+
+  function initializePostType($postType, $container) {
+    $postType->register();
   }
 
 }
