@@ -1,8 +1,7 @@
 filter:
   paths: [lib/*]
 tools:
-  external_code_coverage:
-    runs: 2
+  external_code_coverage: false
   php_sim: true
   php_changetracking: true
   php_mess_detector: true

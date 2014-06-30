@@ -16,8 +16,4 @@ before_script:
   - bash bin/install-wp-tests.sh wordpress_test travis ''  localhost $WP_VERSION
 
 script:
-  - ./vendor/bin/phpunit --coverage-clover=coverage.clover
-
-after_script:
-  - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+  - ./vendor/bin/phpunit
