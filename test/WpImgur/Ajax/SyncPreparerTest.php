@@ -90,6 +90,21 @@ class SyncPreparerTest extends \WP_UnitTestCase {
     $this->assertEquals('foo', $this->store->getOption('album'));
   }
 
+  function test_it_does_not_create_album_if_present() {
+    $this->store->setOption('album', 'foo');
+    $album = array('id' => 'foo', 'title' => site_url());
+    $mock = $this->getMock('Imgur\AlbumRepo');
+    $mock->expects($this->once())
+      ->method('find')
+      ->with('foo')
+      ->will($this->returnValue($album));
+
+    $this->preparer->imgurAlbumRepo = $mock;
+    $actual = $this->preparer->createAlbum();
+
+    $this->assertFalse($actual);
+  }
+
   function test_it_will_use_push_mode_if_upload_fails() {
     $mock = $this->getMock('Imgur\ImageRepo');
     $mock

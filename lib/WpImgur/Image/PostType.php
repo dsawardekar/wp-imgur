@@ -44,7 +44,12 @@ class PostType {
     if (count($posts) === 1) {
       $post    = $posts[0];
       $content = $post->post_content;
-      return $this->toImages($content);
+      $images  = $this->toImages($content);
+
+      return array(
+        'post' => $post,
+        'images' => $images
+      );
     } else {
       return false;
     }

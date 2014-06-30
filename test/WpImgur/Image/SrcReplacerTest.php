@@ -236,4 +236,9 @@ class SrcReplacerTest extends \WP_UnitTestCase {
     $this->assertEquals($expected, $actual);
     $this->assertTrue($this->replacer->replaced());
   }
+
+  function test_it_can_be_enabled() {
+    $this->replacer->enable();
+    $this->assertEquals(90, has_filter('the_content', array($this->replacer, 'replace')));
+  }
 }

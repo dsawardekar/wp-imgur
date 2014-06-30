@@ -96,6 +96,10 @@ class Synchronizer {
       if (!$this->hookMode) {
         $this->ajaxJsonPrinter->sendError($error);
       } elseif (!defined('PHPUNIT_RUNNER')) {
+        /* errors inside hook mode are logged to avoid sending
+         * invalid json.
+         * TODO: Figure out a better solution
+         */
         error_log($error);
       }
     }

@@ -55,6 +55,16 @@ class ImageTest extends \WP_UnitTestCase {
     $this->assertEquals($meta, $this->image->getMeta());
   }
 
+  function test_it_gets_meta_from_parent_image_if_it_has_parent() {
+    $meta = array('foo' => 'bar');
+
+    $parent = $this->container->lookup('image');
+    $parent->setMeta($meta);
+    $this->image->setParent($parent);
+
+    $this->assertEquals($meta, $this->image->getMeta());
+  }
+
   function test_it_knows_its_width() {
     $attr = array('width' => 100);
     $this->image->setAttributes($attr);
