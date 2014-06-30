@@ -288,6 +288,30 @@ class SynchronizerTest extends \WP_UnitTestCase {
     $this->assertEquals('foo-link', $store->getImageUrl('91x92'));
   }
 
+  function test_it_returns_existing_image_url_if_image_is_in_sync() {
+    $this->uploader->result = array('link' => 'foo-link');
+    $image = $this->lookup('syncImage');
+    $image->setAttributes(array(
+      'file' => 'foo',
+      'width' => 91,
+      'height' => 92
+    ));
+
+    $dummyImageUrl = 'http://i.imgur.com/Q3cUg29s.gif';
+    $store = $this->getMock('WpImgur\Image\Store');
+    $store->expects($this->exactly(2))
+      ->method('getImageUrl')
+      ->with('91x92')
+      ->will($this->returnValue($dummyImageUrl));
+
+    $store->expects($this->once())
+      ->method('hasImage')
+      ->will($this->returnValue(true));
+
+    $actual = $this->syncer->syncImage($image, $store);
+    $this->assertEquals($dummyImageUrl, $actual);
+  }
+
   function test_it_will_return_image_url_as_is_if_present() {
     if (!defined('TRAVIS')) return;
     $this->uploader->result = array('link' => 'foo-link');
