@@ -811,11 +811,12 @@
       },
 
       stop: function() {
-        this.set('active', false);
-        this.taskQueue.stop();
-        this.triggerQueueEvent('taskQueueStop');
+        if (this.set('active')) {
+          this.set('active', false);
+          this.taskQueue.stop();
+          this.triggerQueueEvent('taskQueueStop');
+        }
       },
-
 
       startQueue: function(items) {
         var i = 0;
