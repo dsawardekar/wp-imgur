@@ -4,7 +4,7 @@ namespace WpImgur\Image;
 
 use Encase\Container;
 
-class ImageStoreTest extends \WP_UnitTestCase {
+class StoreTest extends \WP_UnitTestCase {
 
   public $container;
   public $store;
@@ -17,10 +17,15 @@ class ImageStoreTest extends \WP_UnitTestCase {
     $this->container
       ->factory('image', 'WpImgur\Image\Image')
       ->singleton('imagePostType', 'WpImgur\Image\PostType')
+      ->initializer('imagePostType', array($this, 'initializePostType'))
       ->factory('imageStore', 'WpImgur\Image\Store');
 
     $this->store = $this->container->lookup('imageStore');
     $this->postType = $this->container->lookup('imagePostType');
+  }
+
+  function initializePostType($postType, $container) {
+    $postType->register();
   }
 
   function lookup($key) {

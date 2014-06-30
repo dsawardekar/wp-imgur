@@ -91,6 +91,7 @@ class Store {
         $this->id, $this->images
       );
     } else {
+
       $result = $this->imagePostType->create(
         $this->getSlug(), $this->images
       );

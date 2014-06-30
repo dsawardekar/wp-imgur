@@ -22,6 +22,7 @@ class SynchronizerTest extends \WP_UnitTestCase {
       ->factory('syncImage', 'WpImgur\Image\SyncImage')
       ->factory('imageStore', 'WpImgur\Image\Store')
       ->singleton('imagePostType', 'WpImgur\Image\PostType')
+      ->initializer('imagePostType', array($this, 'initializePostType'))
       ->singleton('attachmentPostType', 'WpImgur\Attachment\PostType')
       ->singleton('imageUploader', 'WpImgur\Image\SyncUploader')
       ->singleton('ajaxJsonPrinter', 'WpImgur\Image\SyncPrinter')
@@ -30,6 +31,10 @@ class SynchronizerTest extends \WP_UnitTestCase {
     $this->uploader = $this->container->lookup('imageUploader');
     $this->printer  = $this->container->lookup('ajaxJsonPrinter');
     $this->syncer   = $this->container->lookup('imageSynchronizer');
+  }
+
+  function initializePostType($postType, $container) {
+    $postType->register();
   }
 
   function getImageData() {

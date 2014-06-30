@@ -55,6 +55,14 @@ class PostTypeTest extends \WP_UnitTestCase {
     $this->assertTrue(post_type_exists('imgur_image'));
   }
 
+  function test_it_does_not_register_if_already_registered() {
+    $this->postType->register();
+    $this->postType->didRegister = 'already_registered';
+
+    $this->postType->register();
+    $this->assertEquals('already_registered', $this->postType->didRegister);
+  }
+
   function test_it_can_convert_post_name_to_slug() {
     $actual = $this->postType->toSlug('Hello World');
     $this->assertEquals('hello-world', $actual);

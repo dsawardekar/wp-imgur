@@ -17,9 +17,15 @@ class SrcReplacerTest extends \WP_UnitTestCase {
       ->factory('imageSrcReplacer', 'WpImgur\Image\SrcReplacer')
       ->factory('imageCollection', 'WpImgur\Image\Collection')
       ->factory('imageStore', 'WpImgur\Image\Store')
-      ->singleton('imagePostType', 'WpImgur\Image\PostType');
+      ->singleton('imagePostType', 'WpImgur\Image\PostType')
+      ->initializer('imagePostType', array($this, 'initializePostType'));
+
 
     $this->replacer = $this->container->lookup('imageSrcReplacer');
+  }
+
+  function initializePostType($postType, $container) {
+    $postType->register();
   }
 
   function test_it_has_a_container() {
