@@ -33,6 +33,15 @@ class CredentialsTest extends \WP_UnitTestCase {
     $this->assertFalse($this->cred->loaded());
   }
 
+  function test_it_does_not_load_credentials_if_already_loaded() {
+    $mock = $this->getMock('Arrow\Options\Store');
+    $mock->expects($this->once())->method('load');
+
+    $this->cred->optionsStore = $mock;
+    $this->cred->load();
+    $this->cred->load();
+  }
+
   function test_it_has_blank_credentials_if_not_present_in_db() {
     $this->cred->load();
     $this->assertEquals('', $this->cred->getAccessToken());
