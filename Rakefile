@@ -106,7 +106,7 @@ namespace :composer do
   desc "Update Composer dependencies"
   task :update do
     sh 'rm -rf vendor' if File.directory?('vendor')
-    sh 'composer update'
+    sh 'composer update --no-dev'
 
     # todo: use porcelain if this isn't good enough
     changed = `git status`
@@ -114,6 +114,11 @@ namespace :composer do
       sh 'git add composer.lock'
       sh 'git commit -m "Fresh composer update [ci-skip]"'
     end
+  end
+
+  task :update_all do
+    sh 'rm -rf vendor' if File.directory?('vendor')
+    sh 'composer update'
   end
 
   desc "Update Requirements.php"
@@ -238,5 +243,5 @@ task :publish => [
 
 desc 'Initialize - after distribution'
 task :init => [
-  'composer:update'
+  'composer:update_all'
 ]
