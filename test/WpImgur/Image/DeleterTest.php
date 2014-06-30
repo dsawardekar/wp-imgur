@@ -66,6 +66,31 @@ class DeleterTest extends \WP_UnitTestCase {
     $this->assertTrue($actual);
   }
 
+  function test_it_will_ignore_404_errors_when_deleting_images() {
+    $repo = $this->getMock('Imgur\ImageRepo');
+    $repo->expects($this->once())
+      ->method('delete')
+      ->with('foo')
+      ->will($this->throwException(new \Imgur\Exception('Image not found')));
+    $this->deleter->imgurImageRepo = $repo;
+
+    $actual = $this->deleter->deleteImgurImage('foo');
+
+    $this->assertTrue($actual);
+  }
+
+  function test_it_will_not_ignore_other_errors_when_deleting_images() {
+    $repo = $this->getMock('Imgur\ImageRepo');
+    $repo->expects($this->once())
+      ->method('delete')
+      ->with('foo')
+      ->will($this->throwException(new \Imgur\Exception('foo bar')));
+    $this->deleter->imgurImageRepo = $repo;
+
+    $this->setExpectedException('Imgur\Exception');
+    $actual = $this->deleter->deleteImgurImage('foo');
+  }
+
   function test_it_can_find_imgur_images_for_post_id() {
     $this->postType->register();
     $content = array(
