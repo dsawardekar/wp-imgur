@@ -70,6 +70,10 @@ using the `Cleanup` section.
 
 == Changelog ==
 
+= Current =
+
+* Upgrades to Arrow 1.3.0.
+
 = 0.4.2 =
 
 * Adds optimized distribution. Does not include dev packages.
