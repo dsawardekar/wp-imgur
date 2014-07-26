@@ -1,6 +1,6 @@
 (function() {
 
-  var envType = wp_imgur_app_run.debug === '1' ? 'development' : 'production';
+  var envType = wp_imgur.options.debug === '1' ? 'development' : 'production';
   var ENV = {
     "environment"  : envType,
     "baseURL"      : "/",

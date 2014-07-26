@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d0e15b5969e35f8db39847a4cfbb61d8",
+    "hash": "7649f5dea4817b39daafcdbd9b5c23bd",
     "packages": [
         {
             "name": "dsawardekar/arrow",
-            "version": "1.3.0",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dsawardekar/arrow.git",
-                "reference": "2ed91a26dcd1386ec4b14601f88c9dd8a1b66b87"
+                "reference": "762c43cc2bcd41e400ed00f9b58a983fbaff2780"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dsawardekar/arrow/zipball/2ed91a26dcd1386ec4b14601f88c9dd8a1b66b87",
-                "reference": "2ed91a26dcd1386ec4b14601f88c9dd8a1b66b87",
+                "url": "https://api.github.com/repos/dsawardekar/arrow/zipball/762c43cc2bcd41e400ed00f9b58a983fbaff2780",
+                "reference": "762c43cc2bcd41e400ed00f9b58a983fbaff2780",
                 "shasum": ""
             },
             "require": {
@@ -56,7 +56,7 @@
                 "wordpress",
                 "wordpress plugins"
             ],
-            "time": "2014-07-16 12:50:43"
+            "time": "2014-07-26 08:55:54"
         },
         {
             "name": "dsawardekar/encase-php",
@@ -1226,6 +1226,7 @@
     "stability-flags": [
 
     ],
+    "prefer-stable": false,
     "platform": [
 
     ],
