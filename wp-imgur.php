@@ -2,7 +2,7 @@
 /*
 Plugin Name: wp-imgur
 Description: Serves your Media Library from imgur.com.
-Version: 0.4.2
+Version: 0.5.0
 Author: Darshan Sawardekar
 Author URI: http://pressing-matters.io/
 Plugin URI: http://wordpress.org/plugins/wp-imgur
