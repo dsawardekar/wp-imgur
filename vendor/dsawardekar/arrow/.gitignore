@@ -1,0 +1,16 @@
+*.swp
+*.swo
+tmp
+vendor
+!test/plugins/*/vendor
+build
+wp-cli*.yml
+bower_components
+node_modules
+dist/*
+!dist/.gitadd
+test/dist/templates/*
+!test/dist/templates/.gitadd
+tmptests
+clover.xml
+.coveralls.yml
