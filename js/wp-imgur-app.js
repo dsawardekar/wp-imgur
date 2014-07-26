@@ -359,7 +359,7 @@
 
       syncOnMediaUpload: function(name, value) {
         if (this._syncOnMediaUpload === undefined) {
-          this._syncOnMediaUpload = this.get('store').syncOnMediaUpload;
+          this._syncOnMediaUpload = !!this.get('store').syncOnMediaUpload;
         }
 
         if (value !== undefined) {
@@ -371,7 +371,7 @@
 
       syncOnMediaEdit: function(name, value) {
         if (this._syncOnMediaEdit === undefined) {
-          this._syncOnMediaEdit = this.get('store').syncOnMediaEdit;
+          this._syncOnMediaEdit = !!this.get('store').syncOnMediaEdit;
         }
 
         if (value !== undefined) {
