@@ -14,7 +14,7 @@ require_once(__DIR__ . '/vendor/dsawardekar/arrow/lib/Arrow/ArrowPluginLoader.ph
 function wp_imgur_main() {
   $options = array(
     'plugin' => 'WpImgur\Plugin',
-    'arrowVersion' => '1.2.1'
+    'arrowVersion' => '1.6.0'
   );
 
   ArrowPluginLoader::load(__FILE__, $options);
