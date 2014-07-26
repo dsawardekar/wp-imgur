@@ -319,10 +319,10 @@
     var Ember = __dependency1__["default"];
 
     var Config = Ember.Object.extend({
-      configKey: 'wp_imgur_app_run',
+      configKey: 'wp_imgur',
 
       store: function() {
-        return window[this.get('configKey')];
+        return window[this.get('configKey')].options;
       }.property(),
 
       apiEndpoint: function() {
@@ -334,11 +334,11 @@
       }.property('store'),
 
       debug: function() {
-        return this.get('store').debug === '1';
+        return this.get('store').debug;
       }.property('store'),
 
       authorized: function() {
-        return this.get('store').authorized === '1';
+        return this.get('store').authorized;
       }.property('store'),
 
       authorizeUrl: function() {
@@ -359,7 +359,7 @@
 
       syncOnMediaUpload: function(name, value) {
         if (this._syncOnMediaUpload === undefined) {
-          this._syncOnMediaUpload = this.get('store').syncOnMediaUpload === '1';
+          this._syncOnMediaUpload = this.get('store').syncOnMediaUpload;
         }
 
         if (value !== undefined) {
@@ -371,7 +371,7 @@
 
       syncOnMediaEdit: function(name, value) {
         if (this._syncOnMediaEdit === undefined) {
-          this._syncOnMediaEdit = this.get('store').syncOnMediaEdit === '1';
+          this._syncOnMediaEdit = this.get('store').syncOnMediaEdit;
         }
 
         if (value !== undefined) {
