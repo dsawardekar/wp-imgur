@@ -181,35 +181,12 @@ namespace :github do
   end
 end
 
-namespace :generator do
-  desc 'Generate Languages'
-  task 'generate_languages' do
-    languages = Dir.glob('js/languages/*.js').map do |file|
-      File.basename(file, '.js')
+namespace :pomo do
+  desc 'Build .mo files'
+  task :build do
+    Dir.glob('languages/*.{po,pot}').each do |file|
+      sh "msgfmt -c -v '#{file}' -o 'languages/#{File.basename(file, '.*')}'.mo"
     end
-
-    template = ERB.new(File.read('lib/templates/Languages.php.erb'), nil, '-')
-    opts = OpenStruct.new({
-      :languages => languages
-    })
-
-    vars = opts.instance_eval { binding }
-    File.write('lib/WpSyntaxHighlighter/Languages.php', template.result(vars))
-  end
-
-  desc 'Generate Themes'
-  task 'generate_themes' do
-    themes = Dir.glob('css/*.css').map do |file|
-      File.basename(file, '.css')
-    end
-
-    template = ERB.new(File.read('lib/templates/Themes.php.erb'), nil, '-')
-    opts = OpenStruct.new({
-      :themes => themes
-    })
-
-    vars = opts.instance_eval { binding }
-    File.write('lib/WpSyntaxHighlighter/Themes.php', template.result(vars))
   end
 end
 

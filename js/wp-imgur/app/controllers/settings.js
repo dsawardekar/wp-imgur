@@ -4,6 +4,7 @@ import auth from 'wp-imgur/models/auth';
 import pages from 'wp-imgur/models/pages';
 import Notice from 'wp-imgur/models/notice';
 import image from 'wp-imgur/models/image';
+import I18n from '../ext/ember_i18n';
 
 var SettingsController = Ember.ObjectController.extend({
   config: config,
@@ -15,7 +16,7 @@ var SettingsController = Ember.ObjectController.extend({
   }.property('config.album'),
 
   onDeleteImageStart: function() {
-    Notice.show('progress', 'Deleting Images ...');
+    Notice.show('progress', I18n.t('status.cleanup.start'));
     pages.set('lockEnabled', true);
   },
 
@@ -28,13 +29,13 @@ var SettingsController = Ember.ObjectController.extend({
   },
 
   onDeleteImageError: function(error) {
-    Notice.show('error', 'Failed to delete image: ' + error);
+    Notice.show('error', I18n.t('status.cleanup.failed') + ': ' + error);
     pages.set('lockEnabled', false);
   },
 
   onDeleteImageComplete: function() {
     var siteUrl = config.get('siteUrl');
-    Notice.show('success', 'Album "' + siteUrl + '" was emptied successfully.');
+    Notice.show('success', I18n.t('Album') + ' "' + siteUrl + ' ' + I18n.t('status.cleanup.success'));
     pages.set('lockEnabled', false);
   },
 
