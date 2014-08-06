@@ -3,12 +3,12 @@ import Ember from 'ember';
 var TabBarView = Ember.CollectionView.extend({
   classNames: ['nav-tab-wrapper'],
   tagName: 'span',
-  content: ['Sync', 'Settings'],
+  content: ['tab.sync', 'tab.settings'],
   _selectedIndex: 0,
   _lockEnabled: false,
   didRenderOnce: false,
 
-  itemViewClass: Ember.View.extend({
+  itemViewClass: Ember.View.extend(Ember.I18n.TranslateableProperties, {
     classNames: ['nav-tab'],
     classNameBindings: [
       'selected:nav-tab-active',
@@ -27,7 +27,11 @@ var TabBarView = Ember.CollectionView.extend({
 
     disabled: function() {
       return !this.get('enabled');
-    }.property('enabled')
+    }.property('enabled'),
+
+    tabLabel: function() {
+      return Ember.I18n.t(this.get('content'));
+    }.property('content')
   }),
 
   didInsertElement: function() {

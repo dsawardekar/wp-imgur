@@ -22,7 +22,7 @@ var ApplicationRoute = Ember.Route.extend({
 
   actions: {
     error: function(reason) {
-      WpNotice.show('error', 'Error: ' + reason);
+      WpNotice.show('error', Ember.I18n.t('status.error') + ': ' + reason);
     }
   }
 });

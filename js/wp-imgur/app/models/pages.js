@@ -2,7 +2,7 @@ import Ember from 'ember';
 import auth from 'wp-imgur/models/auth';
 
 var Pages = Ember.Object.extend({
-  labels: ['Sync', 'Settings'],
+  labels: ['tab.sync', 'tab.settings'],
   _selectedPage: undefined,
   lockEnabled: false,
 
