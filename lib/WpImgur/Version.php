@@ -4,6 +4,6 @@ namespace WpImgur;
 
 class Version {
 
-  static public $version = '0.5.1';
+  static public $version = '0.6.0';
 
 }
