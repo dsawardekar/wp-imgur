@@ -17,6 +17,10 @@
   margin-top: 20px !important;
 }
 
+#message.error {
+  margin-top: 1em;
+}
+
 .wrap-wp-imgur {
   max-width: 1280px;
 }
