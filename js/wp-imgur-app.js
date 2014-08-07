@@ -1,12 +1,13 @@
 
 ;define("wp-imgur/app", 
-  ["ember","ember/resolver","ember/load-initializers","wp-imgur/ext/easy_form","exports"],
-  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __exports__) {
+  ["ember","ember/resolver","ember/load-initializers","wp-imgur/ext/easy_form","wp-imgur/ext/ember_i18n","exports"],
+  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __exports__) {
     "use strict";
     var Ember = __dependency1__["default"];
     var Resolver = __dependency2__["default"];
     var loadInitializers = __dependency3__["default"];
     var EasyForm = __dependency4__["default"];
+    var I18n = __dependency5__["default"];
 
     var App = Ember.Application.extend({
       modulePrefix: 'wp-imgur',
@@ -59,6 +60,17 @@
     });
 
     __exports__["default"] = Ember.EasyForm;
+  });
+;define("wp-imgur/ext/ember_i18n", 
+  ["ember","exports"],
+  function(__dependency1__, __exports__) {
+    "use strict";
+    var Ember = __dependency1__["default"];
+
+    Ember.I18n.translations = window.wp_imgur;
+    Ember.I18n.I18N_COMPILE_WITHOUT_HANDLEBARS = true;
+
+    __exports__["default"] = Ember.I18n;
   });
 ;define("wp-imgur/components/notice-bar", 
   ["ember","wp-imgur/models/notice","exports"],
@@ -243,12 +255,13 @@
     __exports__["default"] = WpButtonComponent;
   });
 ;define("wp-imgur/components/wp-progress-button", 
-  ["ember","exports"],
-  function(__dependency1__, __exports__) {
+  ["ember","wp-imgur/ext/ember_i18n","exports"],
+  function(__dependency1__, __dependency2__, __exports__) {
     "use strict";
     var Ember = __dependency1__["default"];
+    var I18n = __dependency2__["default"];
 
-    var WpProgressButtonComponent = Ember.Component.extend({
+    var WpProgressButtonComponent = Ember.Component.extend(I18n.TranslateableProperties, {
       classNames : ['wp-progress-button-view'],
       type       : 'primary',
       startLabel : 'Start',
@@ -574,7 +587,7 @@
     var auth = __dependency2__["default"];
 
     var Pages = Ember.Object.extend({
-      labels: ['Sync', 'Settings'],
+      labels: ['tab.sync', 'tab.settings'],
       _selectedPage: undefined,
       lockEnabled: false,
 
@@ -607,13 +620,14 @@
     __exports__["default"] = AuthorizedController;
   });
 ;define("wp-imgur/controllers/auth/verifypin", 
-  ["ember","wp-imgur/models/auth","wp-imgur/models/notice","wp-imgur/models/pages","exports"],
-  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __exports__) {
+  ["ember","wp-imgur/models/auth","wp-imgur/models/notice","wp-imgur/models/pages","wp-imgur/ext/ember_i18n","exports"],
+  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __exports__) {
     "use strict";
     var Ember = __dependency1__["default"];
     var auth = __dependency2__["default"];
     var Notice = __dependency3__["default"];
     var pages = __dependency4__["default"];
+    var I18n = __dependency5__["default"];
 
     var VerifyPinController = Ember.ObjectController.extend({
       verifying: false,
@@ -629,7 +643,7 @@
           this.set('verifying', true);
 
           button.waitFor(promise);
-          Notice.showAfter(promise, 'PIN Verified Successfully');
+          Notice.showAfter(promise, I18n.t('status.authorize.success'));
 
           promise.then(function() {
             pages.set('lockEnabled', false);
@@ -644,8 +658,8 @@
     __exports__["default"] = VerifyPinController;
   });
 ;define("wp-imgur/controllers/settings", 
-  ["ember","wp-imgur/config","wp-imgur/models/auth","wp-imgur/models/pages","wp-imgur/models/notice","wp-imgur/models/image","exports"],
-  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __dependency6__, __exports__) {
+  ["ember","wp-imgur/config","wp-imgur/models/auth","wp-imgur/models/pages","wp-imgur/models/notice","wp-imgur/models/image","wp-imgur/ext/ember_i18n","exports"],
+  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __dependency6__, __dependency7__, __exports__) {
     "use strict";
     var Ember = __dependency1__["default"];
     var config = __dependency2__["default"];
@@ -653,6 +667,7 @@
     var pages = __dependency4__["default"];
     var Notice = __dependency5__["default"];
     var image = __dependency6__["default"];
+    var I18n = __dependency7__["default"];
 
     var SettingsController = Ember.ObjectController.extend({
       config: config,
@@ -664,7 +679,7 @@
       }.property('config.album'),
 
       onDeleteImageStart: function() {
-        Notice.show('progress', 'Deleting Images ...');
+        Notice.show('progress', I18n.t('status.cleanup.start') + ' ...');
         pages.set('lockEnabled', true);
       },
 
@@ -677,13 +692,13 @@
       },
 
       onDeleteImageError: function(error) {
-        Notice.show('error', 'Failed to delete image: ' + error);
+        Notice.show('error', I18n.t('status.cleanup.failed') + ': ' + error);
         pages.set('lockEnabled', false);
       },
 
       onDeleteImageComplete: function() {
         var siteUrl = config.get('siteUrl');
-        Notice.show('success', 'Album "' + siteUrl + '" was emptied successfully.');
+        Notice.show('success', I18n.t('album') + ' ' + siteUrl + ' ' + I18n.t('status.cleanup.success'));
         pages.set('lockEnabled', false);
       },
 
@@ -730,7 +745,7 @@
     });
 
     var ImageModel = TaskQueueModel.extend({
-      batchSize: 4,
+      maxBatchSize: 4,
 
       taskEvents            : {
         'taskQueueStart'    : 'deleteImageStart',
@@ -761,7 +776,7 @@
     var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
       taskQueue        : null,
       active           : false,
-      batchSize        : 4,
+      maxBatchSize     : 4,
       didLoad          : false,
       current          : null,
       loading: false,
@@ -775,7 +790,7 @@
       },
 
       init: function() {
-        var taskQueue = TaskQueue.create({ batchSize: this.get('batchSize') });
+        var taskQueue = TaskQueue.create({ maxBatchSize: this.get('maxBatchSize') });
         taskQueue.on('taskQueueStart'    , this , this.didTaskQueueStart);
         taskQueue.on('taskQueueProgress' , this , this.didTaskQueueProgress);
         taskQueue.on('taskQueueComplete' , this , this.didTaskQueueComplete);
@@ -806,6 +821,8 @@
           this.load().then(function(items) {
             self.set('didLoad', true);
             self.startQueue(items);
+          })["catch"](function(error) {
+            self.didTaskQueueError(null, error);
           });
         }
       },
@@ -867,7 +884,9 @@
       didTaskQueueError: function(task, error) {
         this.set('active', false);
         this.triggerQueueEvent('taskQueueError', error);
-        this.taskQueue.stop();
+        if (this.get('didLoad')) {
+          this.taskQueue.stop();
+        }
       },
 
       progress: function() {
@@ -893,7 +912,7 @@
       pending   : null,
       completed : null,
       failures  : null,
-      batchSize : 1,
+      maxBatchSize : 1,
       didFirst  : false,
       active    : false,
 
@@ -1077,33 +1096,58 @@
 
       failureAt: function(task) {
         return this.failures.indexOf(task);
-      }
+      },
+
+      /*
+       * Provides some rudimentary acceleration.
+       *
+       * Until at least maxBatchSize(4) uploads have completed
+       * the batch size is 1, so uploads will be serial.
+       * After that parallel uploads will kick in.
+       *
+       * TODO: If tasks complete very quickly, it suggests the server can
+       * handle more requests. We should be able to do at least 6 parallel
+       * requests as per browser limitations.
+       *
+       * Likewise batchSize could be reduced as well.
+       */
+      batchSize: function() {
+        var completed    = this.get('completed');
+        var maxBatchSize = this.get('maxBatchSize');
+
+        if (completed && completed.length >= maxBatchSize) {
+          return maxBatchSize;
+        } else {
+          return 1;
+        }
+      }.property('maxBatchSize', 'completed.[]')
 
     });
 
     __exports__["default"] = TaskQueue;
   });
 ;define("wp-imgur/controllers/sync", 
-  ["ember","wp-imgur/models/notice","wp-imgur/models/pages","exports"],
-  function(__dependency1__, __dependency2__, __dependency3__, __exports__) {
+  ["ember","wp-imgur/models/notice","wp-imgur/models/pages","wp-imgur/ext/ember_i18n","exports"],
+  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __exports__) {
     "use strict";
     var Ember = __dependency1__["default"];
     var Notice = __dependency2__["default"];
     var pages = __dependency3__["default"];
+    var I18n = __dependency4__["default"];
 
     var SyncController = Ember.ObjectController.extend({
       onSyncStart: function() {
-        Notice.show('progress', 'Starting Sync ...');
+        Notice.show('progress', I18n.t('status.sync.starting') + ' ...');
         pages.set('lockEnabled', true);
       },
 
       onSyncProgress: function() {
         var model = this.get('content');
-        Notice.show('progress', 'Synchronizing ' + model.get('current.name') + ' ...');
+        Notice.show('progress', I18n.t('status.sync.synchronizing') + ' ' + model.get('current.name') + ' ...');
       },
 
       onSyncStop: function() {
-        Notice.show('success', 'Sync Stopped.');
+        Notice.show('success', I18n.t('status.sync.stopped'));
         pages.set('lockEnabled', false);
       },
 
@@ -1113,7 +1157,7 @@
       },
 
       onSyncComplete: function() {
-        Notice.show('success', 'Sync Completed.');
+        Notice.show('success', I18n.t('status.sync.completed'));
         pages.set('lockEnabled', false);
       },
 
@@ -1204,7 +1248,7 @@
     });
 
     var SyncModel = TaskQueueModel.extend({
-      batchSize: 4,
+      maxBatchSize: 4,
 
       taskEvents            : {
         'taskQueueStart'    : 'syncStart',
@@ -1278,7 +1322,7 @@
 
       actions: {
         error: function(reason) {
-          WpNotice.show('error', 'Error: ' + reason);
+          WpNotice.show('error', Ember.I18n.t('status.error') + ': ' + reason);
         }
       }
     });
@@ -1380,7 +1424,7 @@
     __exports__["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [4,'>= 1.0.0'];
     helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-      var buffer = '', stack1, escapeExpression=this.escapeExpression;
+      var buffer = '', stack1, helper, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
 
 
       data.buffer.push("<h2 class=\"nav-tab-wrapper\">\n  <span>WP Imgur</span>\n  ");
@@ -1389,7 +1433,11 @@
         'selectedIndex': ("pages.selectedPage"),
         'lockEnabled': ("pages.lockEnabled")
       },hashTypes:{'content': "ID",'selectedIndex': "ID",'lockEnabled': "ID"},hashContexts:{'content': depth0,'selectedIndex': depth0,'lockEnabled': depth0},contexts:[depth0],types:["STRING"],data:data})));
-      data.buffer.push("\n</h2>\n\n");
+      data.buffer.push("\n  <span class='attribution'>");
+      data.buffer.push(escapeExpression((helper = helpers.t || (depth0 && depth0.t),options={hash:{
+        'tagName': ("span")
+      },hashTypes:{'tagName': "STRING"},hashContexts:{'tagName': depth0},contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "credits.tagline", options) : helperMissing.call(depth0, "t", "credits.tagline", options))));
+      data.buffer.push("<a\n  href=\"http://imgur.com\">Imgur.com</a></span>\n</h2>\n\n");
       stack1 = helpers._triageMustache.call(depth0, "notice-bar", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
       if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
       data.buffer.push("\n");
@@ -1408,10 +1456,12 @@
     __exports__["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [4,'>= 1.0.0'];
     helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-      var buffer = '', stack1;
+      var buffer = '', stack1, helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
 
-      data.buffer.push("<fieldset>\n	<legend>\n    <span>Authorize</span>\n  </legend>\n  <div class=\"wp-imgur-auth\">\n  ");
+      data.buffer.push("<fieldset>\n	<legend>\n    <span>");
+      data.buffer.push(escapeExpression((helper = helpers.t || (depth0 && depth0.t),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "section.auth.title", options) : helperMissing.call(depth0, "t", "section.auth.title", options))));
+      data.buffer.push("</span>\n  </legend>\n  <div class=\"wp-imgur-auth\">\n  ");
       stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
       if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
       data.buffer.push("\n  </div>\n</fieldset>\n");
@@ -1427,13 +1477,14 @@
     __exports__["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [4,'>= 1.0.0'];
     helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-      var buffer = '', stack1, helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+      var buffer = '', helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
 
-      data.buffer.push("<p>WP Imgur is authorized to upload images to your <a\nhref=\"http://imgur.com\">Imgur</a> account in <em>");
-      stack1 = helpers._triageMustache.call(depth0, "config.uploadMode", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-      if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-      data.buffer.push("</em> mode</a>.</p>\n");
+      data.buffer.push("<p></p>\n<p>");
+      data.buffer.push(escapeExpression((helper = helpers.t || (depth0 && depth0.t),options={hash:{
+        'uploadModeBinding': ("config.uploadMode")
+      },hashTypes:{'uploadModeBinding': "ID"},hashContexts:{'uploadModeBinding': depth0},contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "section.auth.authorized", options) : helperMissing.call(depth0, "t", "section.auth.authorized", options))));
+      data.buffer.push("\n");
       data.buffer.push(escapeExpression((helper = helpers['wp-button'] || (depth0 && depth0['wp-button']),options={hash:{
         'action': ("openAuthorizeUrl"),
         'label': ("Reauthorize")
@@ -1454,7 +1505,9 @@
       var buffer = '', helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
 
-      data.buffer.push("<p>Before you begin using WP Imgur, you need to grant it permissions\nto upload media to your Imgur Account. Click the <em>authorize</em> button to\nproceed.</p>\n");
+      data.buffer.push("<p>");
+      data.buffer.push(escapeExpression((helper = helpers.t || (depth0 && depth0.t),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "section.auth.unauthorized", options) : helperMissing.call(depth0, "t", "section.auth.unauthorized", options))));
+      data.buffer.push("</p>\n");
       data.buffer.push(escapeExpression((helper = helpers['wp-button'] || (depth0 && depth0['wp-button']),options={hash:{
         'action': ("openAuthorizeUrl"),
         'label': ("Authorize")
@@ -1784,24 +1837,32 @@
       data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
         'class': ("auth.authorized:extra-settings-active:extra-settings-inactive")
       },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
-      data.buffer.push(">\n<fieldset>\n	<legend>\n    <span>Media Uploader Integration</span>\n  </legend>\n  <p>WP Imgur can auto sync any new images you upload or edit in\n  WordPress. You can\nchange this behaviour below.</p>\n  <p>\n	<label>\n    ");
+      data.buffer.push(">\n<fieldset>\n	<legend>\n    <span>");
+      data.buffer.push(escapeExpression((helper = helpers.t || (depth0 && depth0.t),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "section.mediaintegration.title", options) : helperMissing.call(depth0, "t", "section.mediaintegration.title", options))));
+      data.buffer.push("</span>\n  </legend>\n  <p>");
+      data.buffer.push(escapeExpression((helper = helpers.t || (depth0 && depth0.t),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "section.mediaintegration.help", options) : helperMissing.call(depth0, "t", "section.mediaintegration.help", options))));
+      data.buffer.push("</p>\n  <p>\n	<label>\n    ");
       data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
         'type': ("checkbox"),
         'name': ("syncOnMediaUpload"),
         'checked': ("config.syncOnMediaUpload")
       },hashTypes:{'type': "STRING",'name': "STRING",'checked': "ID"},hashContexts:{'type': depth0,'name': depth0,'checked': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-      data.buffer.push("Auto Sync on Media Upload\n	</label>\n  </p>\n  <p>\n	<label>\n    ");
+      data.buffer.push(escapeExpression((helper = helpers.t || (depth0 && depth0.t),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "button.sync-on-upload", options) : helperMissing.call(depth0, "t", "button.sync-on-upload", options))));
+      data.buffer.push("\n	</label>\n  </p>\n  <p>\n	<label>\n    ");
       data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
         'type': ("checkbox"),
         'name': ("syncOnMediaEdit"),
         'checked': ("config.syncOnMediaEdit")
       },hashTypes:{'type': "STRING",'name': "STRING",'checked': "ID"},hashContexts:{'type': depth0,'name': depth0,'checked': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-      data.buffer.push("Auto Sync on Media Edit\n	</label>\n  </p>\n  ");
+      data.buffer.push(escapeExpression((helper = helpers.t || (depth0 && depth0.t),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "button.sync-on-edit", options) : helperMissing.call(depth0, "t", "button.sync-on-edit", options))));
+      data.buffer.push("\n	</label>\n  </p>\n  ");
       data.buffer.push(escapeExpression((helper = helpers['wp-button'] || (depth0 && depth0['wp-button']),options={hash:{
         'action': ("updateMediaOptions"),
         'label': ("Save Changes")
       },hashTypes:{'action': "STRING",'label': "STRING"},hashContexts:{'action': depth0,'label': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "wp-button", options))));
-      data.buffer.push("\n</fieldset>\n\n<fieldset>\n	<legend><span>Cleanup</span></legend>\n  <p>If you wish to uninstall the plugin you can optionally empty the\n  <a ");
+      data.buffer.push("\n</fieldset>\n\n<fieldset>\n	<legend><span>");
+      data.buffer.push(escapeExpression((helper = helpers.t || (depth0 && depth0.t),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "section.cleanup.title", options) : helperMissing.call(depth0, "t", "section.cleanup.title", options))));
+      data.buffer.push("</span></legend>\n  <p>If you wish to uninstall the plugin you can optionally empty the\n  <a ");
       data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
         'href': ("albumUrl")
       },hashTypes:{'href': "STRING"},hashContexts:{'href': depth0},contexts:[],types:[],data:data})));
@@ -1809,11 +1870,11 @@
       data.buffer.push(escapeExpression((helper = helpers['wp-progress-button'] || (depth0 && depth0['wp-progress-button']),options={hash:{
         'startAction': ("startDeleteImage"),
         'stopAction': ("stopDeleteImage"),
-        'startLabel': ("Empty Album"),
-        'stopLabel': ("Cancel"),
+        'startLabelTranslation': ("button.cleanup"),
+        'stopLabelTranslation': ("button.cancel"),
         'progress': ("image.progress"),
         'started': ("image.active")
-      },hashTypes:{'startAction': "STRING",'stopAction': "STRING",'startLabel': "STRING",'stopLabel': "STRING",'progress': "ID",'started': "ID"},hashContexts:{'startAction': depth0,'stopAction': depth0,'startLabel': depth0,'stopLabel': depth0,'progress': depth0,'started': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "wp-progress-button", options))));
+      },hashTypes:{'startAction': "STRING",'stopAction': "STRING",'startLabelTranslation': "STRING",'stopLabelTranslation': "STRING",'progress': "ID",'started': "ID"},hashContexts:{'startAction': depth0,'stopAction': depth0,'startLabelTranslation': depth0,'stopLabelTranslation': depth0,'progress': depth0,'started': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "wp-progress-button", options))));
       data.buffer.push("\n</fieldset>\n</div>\n");
       return buffer;
       
@@ -1827,18 +1888,24 @@
     __exports__["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [4,'>= 1.0.0'];
     helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-      var buffer = '', stack1, helper, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+      var buffer = '', stack1, helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, self=this;
 
     function program1(depth0,data) {
       
-      
-      data.buffer.push("\n    <p>\n    Please wait while your Media is Synced to <a\n    href=\"http://imgur.com\">Imgur</a> servers. This\n    may take a few minutes depending on the size of your Media Library.\n    </p>\n  ");
+      var buffer = '', helper, options;
+      data.buffer.push("\n    <p>\n     ");
+      data.buffer.push(escapeExpression((helper = helpers.t || (depth0 && depth0.t),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "help.sync-active", options) : helperMissing.call(depth0, "t", "help.sync-active", options))));
+      data.buffer.push("\n    </p>\n  ");
+      return buffer;
       }
 
     function program3(depth0,data) {
       
-      
-      data.buffer.push("\n    <p>\n    Uploads your Media Library to <a\n    href=\"http://imgur.com\">Imgur</a>. You only need to do this\n    the first time that you install WP-Imgur. All subsequent media uploads\n    are automatically synced to the Imgur servers when you upload images via the Media\n    Uploader.\n    </p>\n  ");
+      var buffer = '', helper, options;
+      data.buffer.push("\n    <p>\n    ");
+      data.buffer.push(escapeExpression((helper = helpers.t || (depth0 && depth0.t),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "help.sync", options) : helperMissing.call(depth0, "t", "help.sync", options))));
+      data.buffer.push("\n    </p>\n  ");
+      return buffer;
       }
 
     function program5(depth0,data) {
@@ -1863,11 +1930,11 @@
       data.buffer.push(escapeExpression((helper = helpers['wp-progress-button'] || (depth0 && depth0['wp-progress-button']),options={hash:{
         'startAction': ("startSync"),
         'stopAction': ("stopSync"),
-        'startLabel': ("Start Sync"),
-        'stopLabel': ("Stop Sync"),
+        'startLabelTranslation': ("button.start-sync"),
+        'stopLabelTranslation': ("button.stop-sync"),
         'progress': ("progress"),
         'started': ("active")
-      },hashTypes:{'startAction': "STRING",'stopAction': "STRING",'startLabel': "STRING",'stopLabel': "STRING",'progress': "ID",'started': "ID"},hashContexts:{'startAction': depth0,'stopAction': depth0,'startLabel': depth0,'stopLabel': depth0,'progress': depth0,'started': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "wp-progress-button", options))));
+      },hashTypes:{'startAction': "STRING",'stopAction': "STRING",'startLabelTranslation': "STRING",'stopLabelTranslation': "STRING",'progress': "ID",'started': "ID"},hashContexts:{'startAction': depth0,'stopAction': depth0,'startLabelTranslation': depth0,'stopLabelTranslation': depth0,'progress': depth0,'started': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "wp-progress-button", options))));
       data.buffer.push("\n   ");
       stack1 = helpers['if'].call(depth0, "current.thumbnail", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],data:data});
       if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
@@ -1887,7 +1954,7 @@
       var buffer = '', stack1;
 
 
-      stack1 = helpers._triageMustache.call(depth0, "view.content", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+      stack1 = helpers._triageMustache.call(depth0, "view.tabLabel", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
       if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
       data.buffer.push("\n");
       return buffer;
@@ -1903,12 +1970,12 @@
     var TabBarView = Ember.CollectionView.extend({
       classNames: ['nav-tab-wrapper'],
       tagName: 'span',
-      content: ['Sync', 'Settings'],
+      content: ['tab.sync', 'tab.settings'],
       _selectedIndex: 0,
       _lockEnabled: false,
       didRenderOnce: false,
 
-      itemViewClass: Ember.View.extend({
+      itemViewClass: Ember.View.extend(Ember.I18n.TranslateableProperties, {
         classNames: ['nav-tab'],
         classNameBindings: [
           'selected:nav-tab-active',
@@ -1927,7 +1994,11 @@
 
         disabled: function() {
           return !this.get('enabled');
-        }.property('enabled')
+        }.property('enabled'),
+
+        tabLabel: function() {
+          return Ember.I18n.t(this.get('content'));
+        }.property('content')
       }),
 
       didInsertElement: function() {
