@@ -62,7 +62,7 @@ Note: You will need to manually sync if you disable Auto-Sync.
 = Can I revert back to serving images from /wp-content? =
 
 Yes. The plugin does not modify your Media Library in any manner. On
-uninstallation the image paths will immediately revert to the
+deactivation/uninstallation the image paths will immediately revert to the
 /wp-content paths.
 
 Additionally you may also empty the images synced to the Imgur Album by
