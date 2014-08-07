@@ -17,6 +17,10 @@
   margin-top: 20px !important;
 }
 
+#message.error {
+  margin-top: 1em;
+}
+
 .wrap-wp-imgur {
   max-width: 1280px;
 }
@@ -189,4 +193,26 @@ fieldset legend {
 
 .wp-progress-button .button {
   vertical-align: middle;
+}
+
+.attribution {
+  font-size: 0.7em;
+}
+
+.attribution {
+  float: right;
+}
+
+.attribution a {
+  text-decoration: none;
+}
+
+.attribution a:hover {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 520px) {
+  .attribution .text {
+    display: none;
+  }
 }

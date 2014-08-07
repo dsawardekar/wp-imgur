@@ -33,5 +33,6 @@ if (process.env.REMOVE_JQUERY) {
 
 app.import('vendor/ember-validations/dist/ember-validations.js');
 app.import('vendor/ember-easyForm/dist/ember-easyForm.js');
+app.import('vendor/ember-i18n/lib/i18n.js');
 
 module.exports = app.toTree();

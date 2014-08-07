@@ -5,7 +5,7 @@ var TaskQueue = Ember.Object.extend(Ember.Evented, {
   pending   : null,
   completed : null,
   failures  : null,
-  batchSize : 1,
+  maxBatchSize : 1,
   didFirst  : false,
   active    : false,
 
@@ -190,7 +190,31 @@ var TaskQueue = Ember.Object.extend(Ember.Evented, {
 
   failureAt: function(task) {
     return this.failures.indexOf(task);
-  }
+  },
+
+  /*
+   * Provides some rudimentary acceleration.
+   *
+   * Until at least maxBatchSize(4) uploads have completed
+   * the batch size is 1, so uploads will be serial.
+   * After that parallel uploads will kick in.
+   *
+   * TODO: If tasks complete very quickly, it suggests the server can
+   * handle more requests. We should be able to do at least 6 parallel
+   * requests as per browser limitations.
+   *
+   * Likewise batchSize could be reduced as well.
+   */
+  batchSize: function() {
+    var completed    = this.get('completed');
+    var maxBatchSize = this.get('maxBatchSize');
+
+    if (completed && completed.length >= maxBatchSize) {
+      return maxBatchSize;
+    } else {
+      return 1;
+    }
+  }.property('maxBatchSize', 'completed.[]')
 
 });
 

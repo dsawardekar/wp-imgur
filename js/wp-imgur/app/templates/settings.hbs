@@ -5,35 +5,33 @@
 <div {{bind-attr class="auth.authorized:extra-settings-active:extra-settings-inactive"}}>
 <fieldset>
 	<legend>
-    <span>Media Uploader Integration</span>
+    <span>{{ t 'section.mediaintegration.title' }}</span>
   </legend>
-  <p>WP Imgur can auto sync any new images you upload or edit in
-  WordPress. You can
-change this behaviour below.</p>
+  <p>{{ t 'section.mediaintegration.help' }}</p>
   <p>
 	<label>
     {{input type="checkbox" name="syncOnMediaUpload"
-    checked=config.syncOnMediaUpload}}Auto Sync on Media Upload
+    checked=config.syncOnMediaUpload}}{{t 'button.sync-on-upload' }}
 	</label>
   </p>
   <p>
 	<label>
     {{input type="checkbox" name="syncOnMediaEdit"
-    checked=config.syncOnMediaEdit}}Auto Sync on Media Edit
+    checked=config.syncOnMediaEdit}}{{ t 'button.sync-on-edit' }}
 	</label>
   </p>
   {{wp-button action='updateMediaOptions' label='Save Changes'}}
 </fieldset>
 
 <fieldset>
-	<legend><span>Cleanup</span></legend>
+	<legend><span>{{ t 'section.cleanup.title' }}</span></legend>
   <p>If you wish to uninstall the plugin you can optionally empty the
   <a {{ bind-attr href='albumUrl' }}>Album</a> on the Imgur server containing your synced images.</p>
   {{wp-progress-button
     startAction='startDeleteImage'
     stopAction='stopDeleteImage'
-    startLabel='Empty Album'
-    stopLabel='Cancel'
+    startLabelTranslation='button.cleanup'
+    stopLabelTranslation='button.cancel'
     progress=image.progress
     started=image.active
    }}

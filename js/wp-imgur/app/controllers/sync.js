@@ -1,20 +1,21 @@
 import Ember from 'ember';
 import Notice from 'wp-imgur/models/notice';
 import pages from 'wp-imgur/models/pages';
+import I18n from '../ext/ember_i18n';
 
 var SyncController = Ember.ObjectController.extend({
   onSyncStart: function() {
-    Notice.show('progress', 'Starting Sync ...');
+    Notice.show('progress', I18n.t('status.sync.starting') + ' ...');
     pages.set('lockEnabled', true);
   },
 
   onSyncProgress: function() {
     var model = this.get('content');
-    Notice.show('progress', 'Synchronizing ' + model.get('current.name') + ' ...');
+    Notice.show('progress', I18n.t('status.sync.synchronizing') + ' ' + model.get('current.name') + ' ...');
   },
 
   onSyncStop: function() {
-    Notice.show('success', 'Sync Stopped.');
+    Notice.show('success', I18n.t('status.sync.stopped'));
     pages.set('lockEnabled', false);
   },
 
@@ -24,7 +25,7 @@ var SyncController = Ember.ObjectController.extend({
   },
 
   onSyncComplete: function() {
-    Notice.show('success', 'Sync Completed.');
+    Notice.show('success', I18n.t('status.sync.completed'));
     pages.set('lockEnabled', false);
   },
 

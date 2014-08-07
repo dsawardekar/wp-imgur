@@ -26,11 +26,17 @@ class SynchronizerTest extends \WP_UnitTestCase {
       ->singleton('attachmentPostType', 'WpImgur\Attachment\PostType')
       ->singleton('imageUploader', 'WpImgur\Image\SyncUploader')
       ->singleton('ajaxJsonPrinter', 'WpImgur\Image\SyncPrinter')
+      ->packager('imgurApiPackager'   ,  'WpImgur\Api\Packager')
       ->factory('imageSynchronizer', 'WpImgur\Image\Synchronizer');
 
     $this->uploader = $this->container->lookup('imageUploader');
     $this->printer  = $this->container->lookup('ajaxJsonPrinter');
     $this->syncer   = $this->container->lookup('imageSynchronizer');
+    $this->imgurAdapter = $this->container->lookup('imgurAdapter');
+
+    $cred = $this->container->lookup('imgurCredentials');
+    $cred->setAccessToken('foo');
+    $cred->setAccessTokenExpiry(60);
   }
 
   function initializePostType($postType, $container) {
@@ -333,6 +339,27 @@ class SynchronizerTest extends \WP_UnitTestCase {
 
     $actual = $this->syncer->syncImage($image, $store);
     $this->assertEquals('http://imgur.com/Q3cUg29', $store->getImageUrl('91x92'));
+  }
+
+  function test_it_will_not_attach_post_meta_hooks_if_not_authorized() {
+    $cred = $this->container->lookup('imgurCredentials');
+    $cred->setAccessToken('');
+
+    $addCallback = array($this->syncer, 'onAttachmentMetaChange');
+    $updateCallback = array($this->syncer, 'onAttachmentMetaUpdate');
+
+    $this->syncer->enable();
+    $this->assertFalse(has_action('added_post_meta', $addCallback));
+    $this->assertFalse(has_action('updated_post_meta', $updateCallback));
+  }
+
+  function test_it_will_attach_post_meta_hooks_if_authorized() {
+    $addCallback = array($this->syncer, 'onAttachmentMetaChange');
+    $updateCallback = array($this->syncer, 'onAttachmentMetaUpdate');
+
+    $this->syncer->enable();
+    $this->assertEquals(10, has_action('added_post_meta', $addCallback));
+    $this->assertEquals(10, has_action('updated_post_meta', $updateCallback));
   }
 
   /* integration tests */

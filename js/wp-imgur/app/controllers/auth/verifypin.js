@@ -2,6 +2,7 @@ import Ember from 'ember';
 import auth from 'wp-imgur/models/auth';
 import Notice from 'wp-imgur/models/notice';
 import pages from 'wp-imgur/models/pages';
+import I18n from '../../ext/ember_i18n';
 
 var VerifyPinController = Ember.ObjectController.extend({
   verifying: false,
@@ -17,7 +18,7 @@ var VerifyPinController = Ember.ObjectController.extend({
       this.set('verifying', true);
 
       button.waitFor(promise);
-      Notice.showAfter(promise, 'PIN Verified Successfully');
+      Notice.showAfter(promise, I18n.t('status.authorize.success'));
 
       promise.then(function() {
         pages.set('lockEnabled', false);

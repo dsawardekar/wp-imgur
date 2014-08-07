@@ -1,6 +1,7 @@
 import Ember from 'ember';
+import I18n from '../ext/ember_i18n';
 
-var WpProgressButtonComponent = Ember.Component.extend({
+var WpProgressButtonComponent = Ember.Component.extend(I18n.TranslateableProperties, {
   classNames : ['wp-progress-button-view'],
   type       : 'primary',
   startLabel : 'Start',

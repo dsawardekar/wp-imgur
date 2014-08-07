@@ -4,7 +4,7 @@ import TaskQueue from 'wp-imgur/ext/task_queue';
 var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
   taskQueue        : null,
   active           : false,
-  batchSize        : 4,
+  maxBatchSize     : 4,
   didLoad          : false,
   current          : null,
   loading: false,
@@ -18,7 +18,7 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
   },
 
   init: function() {
-    var taskQueue = TaskQueue.create({ batchSize: this.get('batchSize') });
+    var taskQueue = TaskQueue.create({ maxBatchSize: this.get('maxBatchSize') });
     taskQueue.on('taskQueueStart'    , this , this.didTaskQueueStart);
     taskQueue.on('taskQueueProgress' , this , this.didTaskQueueProgress);
     taskQueue.on('taskQueueComplete' , this , this.didTaskQueueComplete);
@@ -49,6 +49,9 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
       this.load().then(function(items) {
         self.set('didLoad', true);
         self.startQueue(items);
+      })
+      .catch(function(error) {
+        self.didTaskQueueError(null, error);
       });
     }
   },
@@ -110,7 +113,9 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
   didTaskQueueError: function(task, error) {
     this.set('active', false);
     this.triggerQueueEvent('taskQueueError', error);
-    this.taskQueue.stop();
+    if (this.get('didLoad')) {
+      this.taskQueue.stop();
+    }
   },
 
   progress: function() {
