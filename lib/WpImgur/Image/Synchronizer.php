@@ -8,16 +8,19 @@ class Synchronizer {
   public $attachmentPostType;
   public $imageUploader;
   public $ajaxJsonPrinter;
+  public $imgurAdapter;
   public $optionsStore;
   public $hookMode = false;
 
   function needs() {
-    return array('attachmentPostType', 'imageUploader', 'ajaxJsonPrinter', 'optionsStore');
+    return array('attachmentPostType', 'imageUploader', 'ajaxJsonPrinter', 'optionsStore', 'imgurAdapter');
   }
 
   function enable() {
-    add_action('added_post_meta', array($this, 'onAttachmentMetaChange'), 10, 4);
-    add_action('updated_post_meta', array($this, 'onAttachmentMetaUpdate'), 10, 4);
+    if ($this->imgurAdapter->isAuthorized()) {
+      add_action('added_post_meta', array($this, 'onAttachmentMetaChange'), 10, 4);
+      add_action('updated_post_meta', array($this, 'onAttachmentMetaUpdate'), 10, 4);
+    }
   }
 
   function onAttachmentMetaChange($metaId, $postId, $metaKey, $metaValue) {
