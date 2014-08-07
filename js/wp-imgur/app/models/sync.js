@@ -12,7 +12,7 @@ var SyncImageTask = Ember.Object.extend({
 });
 
 var SyncModel = TaskQueueModel.extend({
-  batchSize: 4,
+  maxBatchSize: 4,
 
   taskEvents            : {
     'taskQueueStart'    : 'syncStart',

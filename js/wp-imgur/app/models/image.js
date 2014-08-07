@@ -11,7 +11,7 @@ var DeleteImageTask = Ember.Object.extend({
 });
 
 var ImageModel = TaskQueueModel.extend({
-  batchSize: 4,
+  maxBatchSize: 4,
 
   taskEvents            : {
     'taskQueueStart'    : 'deleteImageStart',
