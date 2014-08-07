@@ -6,7 +6,7 @@ Requires at least: 3.5.0
 Tested up to: 3.9
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Stable tag: 0.6.1
+Stable tag: 0.7.0
 
 CDN Plugin that serves your Media Library from Imgur.com.
 
@@ -69,6 +69,10 @@ Additionally you may also empty the images synced to the Imgur Album by
 using the `Cleanup` section.
 
 == Changelog ==
+
+= 0.7.0 =
+
+* Switches to full handlebars for ember-i18n.
 
 = 0.6.1 =
 
