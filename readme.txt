@@ -70,6 +70,10 @@ using the `Cleanup` section.
 
 == Changelog ==
 
+= Current =
+
+* Updated default localizations.
+
 = 0.7.0 =
 
 * Switches to full handlebars for ember-i18n.
