@@ -47147,7 +47147,7 @@ define("ember/resolver",
    *     output. The loader's _moduleEntries is consulted so that classes can be
    *     resolved directly via the module loader, without needing a manual
    *     `import`.
-   *  2) is able provide injections to classes that implement `extend`
+   *  2) is able to provide injections to classes that implement `extend`
    *     (as is typical with Ember).
    */
 
@@ -47161,6 +47161,17 @@ define("ember/resolver",
         }
       }
     };
+  }
+
+  if (!Object.create && !Object.create(null).hasOwnProperty) {
+    throw new Error("This browser does not support Object.create(null), please polyfil with es5-sham: http://git.io/yBU2rg");
+  }
+
+  function makeDictionary() {
+    var cache = Object.create(null);
+    cache['_dict'] = null;
+    delete cache['_dict'];
+    return cache;
   }
 
   var underscore = Ember.String.underscore;
@@ -47256,7 +47267,14 @@ define("ember/resolver",
     shouldWrapInClassFactory: function(module, parsedName){
       return false;
     },
+    init: function() {
+      this._super();
+      this._normalizeCache = makeDictionary();
+    },
     normalize: function(fullName) {
+      return this._normalizeCache[fullName] || (this._normalizeCache[fullName] = this._normalize(fullName));
+    },
+    _normalize: function(fullName) {
       // replace `.` with `/` in order to make nested controllers work in the following cases
       // 1. `needs: ['posts/post']`
       // 2. `{{render "posts/post"}}`
@@ -47269,10 +47287,29 @@ define("ember/resolver",
       }
     },
 
+    podBasedLookupWithPrefix: function(podPrefix, parsedName) {
+      var fullNameWithoutType = parsedName.fullNameWithoutType;
+
+      if (parsedName.type === 'template') {
+        fullNameWithoutType = fullNameWithoutType.replace(/^components\//, '');
+      }
+
+        return podPrefix + '/' + fullNameWithoutType + '/' + parsedName.type;
+    },
+
     podBasedModuleName: function(parsedName) {
       var podPrefix = this.namespace.podModulePrefix || this.namespace.modulePrefix;
 
-      return podPrefix + '/' + parsedName.fullNameWithoutType + '/' + parsedName.type;
+      return this.podBasedLookupWithPrefix(podPrefix, parsedName);
+    },
+
+    podBasedComponentsInSubdir: function(parsedName) {
+      var podPrefix = this.namespace.podModulePrefix || this.namespace.modulePrefix;
+      podPrefix = podPrefix + '/components';
+
+      if (parsedName.type === 'component' || parsedName.fullNameWithoutType.match(/^components/)) {
+        return this.podBasedLookupWithPrefix(podPrefix, parsedName);
+      }
     },
 
     mainModuleName: function(parsedName) {
@@ -47310,6 +47347,7 @@ define("ember/resolver",
     moduleNameLookupPatterns: Ember.computed(function(){
       return Ember.A([
         this.podBasedModuleName,
+        this.podBasedComponentsInSubdir,
         this.mainModuleName,
         this.defaultModuleName
       ]);
@@ -49059,6 +49097,222 @@ Ember.EasyForm.processOptions = function(property, options) {
 
 })();
 
+
+;(function(window) {
+  var I18n, assert, findTemplate, get, set, isBinding, lookupKey, pluralForm,
+      PlainHandlebars, EmHandlebars, keyExists, compileTemplate;
+
+  PlainHandlebars = window.Handlebars;
+  EmHandlebars = Ember.Handlebars;
+  get = EmHandlebars.get;
+  set = Ember.set;
+  assert = Ember.assert;
+
+  function warn(msg) { Ember.Logger.warn(msg); }
+
+  if (typeof CLDR !== "undefined" && CLDR !== null) pluralForm = CLDR.pluralForm;
+
+  if (pluralForm == null) {
+    warn("CLDR.pluralForm not found. Ember.I18n will not support count-based inflection.");
+  }
+
+  lookupKey = function(key, hash) {
+    var firstKey, idx, remainingKeys;
+
+    if (hash[key] != null) { return hash[key]; }
+
+    if ((idx = key.indexOf('.')) !== -1) {
+      firstKey = key.substr(0, idx);
+      remainingKeys = key.substr(idx + 1);
+      hash = hash[firstKey];
+      if (hash) { return lookupKey(remainingKeys, hash); }
+    }
+  };
+
+  findTemplate = function(key, setOnMissing) {
+    assert("You must provide a translation key string, not %@".fmt(key), typeof key === 'string');
+    var result = lookupKey(key, I18n.translations);
+
+    if (setOnMissing) {
+      if (result == null) {
+        result = I18n.translations[key] = function() { return "Missing translation: " + key; };
+        result._isMissing = true;
+        warn("Missing translation: " + key);
+        I18n[(typeof I18n.trigger === 'function' ? 'trigger' : 'fire')]('missing', key); //Support 0.9 style .fire
+      }
+    }
+
+    if ((result != null) && !jQuery.isFunction(result)) {
+      result = I18n.translations[key] = I18n.compile(result);
+    }
+
+    return result;
+  };
+
+  keyExists = function(key) {
+    var translation = lookupKey(key, I18n.translations);
+    return translation != null && !translation._isMissing;
+  };
+
+  function eachTranslatedAttribute(object, fn) {
+    var isTranslatedAttribute = /(.+)Translation$/,
+        isTranslatedAttributeMatch;
+
+    for (var key in object) {
+      isTranslatedAttributeMatch = key.match(isTranslatedAttribute);
+      if (isTranslatedAttributeMatch) {
+        fn.call(object, isTranslatedAttributeMatch[1], I18n.t(object[key]));
+      }
+    }
+  }
+
+  compileTemplate = (function() {
+    if (typeof PlainHandlebars.compile === 'function') {
+      return function compileWithHandlebars(template) {
+        return PlainHandlebars.compile(template);
+      };
+    } else {
+      return function cannotCompileTemplate() {
+        throw new Ember.Error('The default Ember.I18n.compile function requires the full Handlebars. Either include the full Handlebars or override Ember.I18n.compile.');
+      };
+    }
+  }());
+
+  I18n = Ember.Evented.apply({
+    compile: compileTemplate,
+
+    translations: {},
+
+    // Ember.I18n.eachTranslatedAttribute(object, callback)
+    //
+    // Iterate over the keys in `object`; for each property that ends in "Translation",
+    // call `callback` with the property name (minus the "Translation" suffix) and the
+    // translation whose key is the property's value.
+    eachTranslatedAttribute: eachTranslatedAttribute,
+
+    template: function(key, count) {
+      var interpolatedKey, result, suffix;
+      if ((count != null) && (pluralForm != null)) {
+        suffix = pluralForm(count);
+        interpolatedKey = "%@.%@".fmt(key, suffix);
+        result = findTemplate(interpolatedKey, false);
+      }
+      return result != null ? result : result = findTemplate(key, true);
+    },
+
+    t: function(key, context) {
+      var template;
+      if (context == null) context = {};
+      template = I18n.template(key, context.count);
+      return template(context);
+    },
+
+    exists: keyExists,
+
+    TranslateableProperties: Ember.Mixin.create({
+      init: function() {
+        var result = this._super.apply(this, arguments);
+        eachTranslatedAttribute(this, function(attribute, translation) {
+          this.addObserver(attribute + 'Translation', this, function(){
+            set(this, attribute, I18n.t(this.get(attribute + 'Translation')));
+          });
+          set(this, attribute, translation);
+        });
+
+        return result;
+      }
+    }),
+
+    TranslateableAttributes: Ember.Mixin.create({
+      didInsertElement: function() {
+        var result = this._super.apply(this, arguments);
+        eachTranslatedAttribute(this, function(attribute, translation) {
+          this.$().attr(attribute, translation);
+        });
+        return result;
+      }
+    })
+  });
+
+  Ember.I18n = I18n;
+
+  isBinding = /(.+)Binding$/;
+
+  // CRUFT: in v2, which requires Ember 1.0+, Ember.uuid will always be
+  //        available, so this function can be cleaned up.
+  var uniqueElementId = (function(){
+    var id = Ember.uuid || 0;
+    return function() {
+      var elementId = 'i18n-' + id++;
+      return elementId;
+    };
+  })();
+
+  EmHandlebars.registerHelper('t', function(key, options) {
+    var attrs, context, data, elementID, result, tagName, view;
+    context = this;
+    attrs = options.hash;
+    data = options.data;
+    view = data.view;
+    tagName = attrs.tagName || 'span';
+    delete attrs.tagName;
+    elementID = uniqueElementId();
+
+    Ember.keys(attrs).forEach(function(property) {
+      var bindPath, currentValue, invoker, isBindingMatch, normalized, normalizedPath, observer, propertyName, root, _ref;
+      isBindingMatch = property.match(isBinding);
+
+      if (isBindingMatch) {
+        propertyName = isBindingMatch[1];
+        bindPath = attrs[property];
+        currentValue = get(context, bindPath, options);
+        attrs[propertyName] = currentValue;
+        invoker = null;
+        normalized = EmHandlebars.normalizePath(context, bindPath, data);
+        _ref = [normalized.root, normalized.path], root = _ref[0], normalizedPath = _ref[1];
+
+        observer = function() {
+          var elem, newValue;
+          if (view.$() == null) {
+            Ember.removeObserver(root, normalizedPath, invoker);
+            return;
+          }
+          newValue = get(context, bindPath, options);
+          elem = view.$("#" + elementID);
+          attrs[propertyName] = newValue;
+          return elem.html(I18n.t(key, attrs));
+        };
+
+        invoker = function() {
+          Ember.run.scheduleOnce('afterRender', observer);
+        };
+
+        return Ember.addObserver(root, normalizedPath, invoker);
+      }
+    });
+
+    result = '<%@ id="%@">%@</%@>'.fmt(tagName, elementID, I18n.t(key, attrs), tagName);
+    return new EmHandlebars.SafeString(result);
+  });
+
+  var attrHelperFunction = function(options) {
+    var attrs, result;
+    attrs = options.hash;
+    result = [];
+
+    Ember.keys(attrs).forEach(function(property) {
+      var translatedValue;
+      translatedValue = I18n.t(attrs[property]);
+      return result.push('%@="%@"'.fmt(property, translatedValue));
+    });
+
+    return new EmHandlebars.SafeString(result.join(' '));
+  };
+
+  EmHandlebars.registerHelper('translateAttr', attrHelperFunction);
+  EmHandlebars.registerHelper('ta', attrHelperFunction);
+
+}).call(undefined, this);
 
 ;define("ember-qunit/isolated-container",
   ["./test-resolver","ember","exports"],
