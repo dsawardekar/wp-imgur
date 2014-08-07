@@ -31,7 +31,6 @@ namespace :git do
     sh 'git rm Rakefile'
     sh "git rm -rf js/#{plugin_slug}" if File.directory?("js/#{plugin_slug}")
     sh 'git rm .scrutinizer.yml'      if File.exists?('.scrutinizer.yml')
-    sh 'git rm .coveralls.yml'        if File.exists?('.coveralls.yml')
 
     sh 'git commit -m "Removes development files [ci-skip]"'
   end
