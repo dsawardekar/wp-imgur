@@ -16,7 +16,7 @@ var SettingsController = Ember.ObjectController.extend({
   }.property('config.album'),
 
   onDeleteImageStart: function() {
-    Notice.show('progress', I18n.t('status.cleanup.start'));
+    Notice.show('progress', I18n.t('status.cleanup.start') + ' ...');
     pages.set('lockEnabled', true);
   },
 
@@ -35,7 +35,7 @@ var SettingsController = Ember.ObjectController.extend({
 
   onDeleteImageComplete: function() {
     var siteUrl = config.get('siteUrl');
-    Notice.show('success', I18n.t('Album') + ' "' + siteUrl + ' ' + I18n.t('status.cleanup.success'));
+    Notice.show('success', I18n.t('album') + ' ' + siteUrl + ' ' + I18n.t('status.cleanup.success'));
     pages.set('lockEnabled', false);
   },
 
