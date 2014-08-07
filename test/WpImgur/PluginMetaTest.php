@@ -80,4 +80,9 @@ class PluginMetaTest extends \WP_UnitTestCase {
     $this->assertEquals(site_url(), $actual['siteUrl']);
   }
 
+  function test_it_has_localizations() {
+    $this->meta->localize();
+    $this->assertNotEmpty($this->meta->localizedStrings);
+  }
+
 }
