@@ -49,6 +49,9 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
       this.load().then(function(items) {
         self.set('didLoad', true);
         self.startQueue(items);
+      })
+      .catch(function(error) {
+        self.didTaskQueueError(null, error);
       });
     }
   },
@@ -110,7 +113,9 @@ var TaskQueueModel = Ember.Object.extend(Ember.Evented, {
   didTaskQueueError: function(task, error) {
     this.set('active', false);
     this.triggerQueueEvent('taskQueueError', error);
-    this.taskQueue.stop();
+    if (this.get('didLoad')) {
+      this.taskQueue.stop();
+    }
   },
 
   progress: function() {
