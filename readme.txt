@@ -70,6 +70,10 @@ using the `Cleanup` section.
 
 == Changelog ==
 
+= Current =
+
+* Switches to full handlebars for ember-i18n.
+
 = 0.6.1 =
 
 * Fixes build for missing `.coveralls.yml`
