@@ -28,6 +28,7 @@ class Plugin extends \Arrow\Plugin {
 
   function initFrontEnd() {
     $this->lookup('imageSrcReplacer')->enable();
+    $this->lookup('imageACFReplacer')->enable();
   }
 
 }

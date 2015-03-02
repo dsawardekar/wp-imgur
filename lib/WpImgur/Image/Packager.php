@@ -10,6 +10,7 @@ class Packager {
       ->factory('imageStore'          , 'WpImgur\Image\Store')
       ->factory('imageCollection'     , 'WpImgur\Image\Collection')
       ->factory('imageSrcReplacer'    , 'WpImgur\Image\SrcReplacer')
+      ->factory('imageACFReplacer'    , 'WpImgur\Image\ACFReplacer')
       ->singleton('imageDeleter'      , 'WpImgur\Image\Deleter')
       ->singleton('imagePostType'     , 'WpImgur\Image\PostType')
       ->singleton('imageUploader'     , 'WpImgur\Image\Uploader')
